@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.AboutActivity">
+
+    <TextView
+        android:id="@+id/about_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="Test about title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/app_icon_about"
+        android:layout_width="270dp"
+        android:layout_height="288dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_title"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/abouticon" />
+
+    <TextView
+        android:id="@+id/nama_aplikasi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/app_icon_about" />
+
+    <TextView
+        android:id="@+id/version_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Version place holder"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/nama_aplikasi" />
+
+    <TextView
+        android:id="@+id/developer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:text="Made with ❤ By Kelompok 4 Pemrograman Mobile B"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/version_number" />
+
+    <TextView
+        android:id="@+id/name_pertama"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="asasasasas"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/developer" />
+
+    <TextView
+        android:id="@+id/name_kedua"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="asasasaasasasas"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/name_pertama" />
+
+    <TextView
+        android:id="@+id/name_ketiga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="asasasasasasas"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/name_kedua" />
+
+    <TextView
+        android:id="@+id/name_keempat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="asasasasasasasasasasasasasasasas"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/name_ketiga"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/finduson_github"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="161dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="32dp"
+        android:background="?attr/selectableItemBackground"
+        android:focusable="true"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/name_keempat"
+        app:srcCompat="@color/black" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
