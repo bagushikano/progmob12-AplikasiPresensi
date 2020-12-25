@@ -6,15 +6,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.PresensiFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/presensi_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Daftar presensi anda"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/presensi_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/presensi_refresh_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="90dp"
+        app:tint="@android:color/white"
+        app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/presensi_detail_fab"
@@ -26,8 +52,6 @@
         android:layout_marginRight="41dp"
         android:layout_marginBottom="49dp"
         app:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </FrameLayout>

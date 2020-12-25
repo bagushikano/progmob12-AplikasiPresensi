@@ -34,8 +34,19 @@
                 android:textColor="?android:attr/textColorSecondary"
                 />
 
+            <TextView
+                android:id="@+id/presensi_detail_mahasiswa_status_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tanggal melakukan presensi placeholder"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?android:attr/textColorSecondary"
+                />
+
 
         </LinearLayout>
+
 
         <!-- Buttons -->
         <LinearLayout
@@ -44,6 +55,7 @@
             android:layout_margin="8dp"
             android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/approve_presensi_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -51,6 +63,7 @@
                 style="?attr/borderlessButtonStyle"
                 />
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/decline_presensi_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Decline"

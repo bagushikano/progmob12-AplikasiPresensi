@@ -11,13 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="194dp"
-            app:srcCompat="@drawable/abouticon"
-            android:scaleType="centerCrop"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,7 +22,7 @@
                 android:id="@+id/home_welcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Placeholder welcome siapa je usernya gt mungking"
+                android:text="Selamat datang %1$s"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
             <TextView
@@ -37,35 +30,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Apaje misal ntar disini, kasi card2 kek stat gitu bagus keknya"
+                android:text="Semoga hari anda menyenangkan!"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?android:attr/textColorSecondary" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:text="Daftar presensi yang sedang terbuka"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
 
-            <!-- Title, secondary and supporting text -->
-            <TextView
-                android:id="@+id/home_anothercard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="card terooosss"
-                android:textAppearance="?attr/textAppearanceHeadline6" />
 
-            <TextView
-                android:id="@+id/home_anothercard1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="saya adalah card"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary" />
-        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/presensi_open_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/presensi_open_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:tint="@android:color/white"
+        app:srcCompat="@drawable/ic_baseline_refresh_24" />
 </FrameLayout>

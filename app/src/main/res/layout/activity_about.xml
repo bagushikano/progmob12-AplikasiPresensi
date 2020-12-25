@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
-        android:text="Test about title"
+        android:text="@string/about_activity_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Version place holder"
+        android:text="@string/app_version_about_activity"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
         app:layout_constraintTop_toBottomOf="@+id/nama_aplikasi" />
@@ -58,7 +58,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
-        android:text="Made with ❤ By Kelompok 4 Pemrograman Mobile B"
+        android:text="@string/made_by_about_activity"
+        android:minLines="2"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
         app:layout_constraintTop_toBottomOf="@+id/version_number" />
@@ -121,7 +122,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
-        app:layout_constraintTop_toBottomOf="@+id/name_keempat"
-        app:srcCompat="@color/black" />
+        app:layout_constraintTop_toBottomOf="@+id/name_keempat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
