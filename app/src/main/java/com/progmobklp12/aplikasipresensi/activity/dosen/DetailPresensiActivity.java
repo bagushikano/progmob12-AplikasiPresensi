@@ -1,4 +1,4 @@
-package com.progmobklp12.aplikasipresensi.activity;
+package com.progmobklp12.aplikasipresensi.activity.dosen;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,7 +33,6 @@ public class DetailPresensiActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     int id;
 
-
     private TextView presensiNameView;
     private TextView presensiKeteranganView;
     private TextView presensiDateOpenView;
@@ -60,7 +59,7 @@ public class DetailPresensiActivity extends AppCompatActivity {
         presensiNameView.setText(extras.getString("PRESENSINAME"));
         presensiKeteranganView.setText(String.format("Keterangan: %s", extras.getString("PRESENSIDESC")));
         presensiDateOpenView.setText(String.format("Tanggal buka: %s", extras.getString("PRESENSIDATEOPEN")));
-        presensiDateCloseView.setText(String.format("tanggal tutup: %s",extras.getString("PRESENSIDATECLOSE")));
+        presensiDateCloseView.setText(String.format("Tanggal tutup: %s",extras.getString("PRESENSIDATECLOSE")));
         presensiStatusView.setText(extras.getString("PRESENSINAME"));
 
         if (extras.getInt("PRESENSISTATUS") == 1) {

@@ -1,8 +1,9 @@
-package com.progmobklp12.aplikasipresensi.activity;
+package com.progmobklp12.aplikasipresensi.activity.dosen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,15 +14,15 @@ import android.widget.Toast;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.progmobklp12.aplikasipresensi.R;
+import com.google.android.material.timepicker.MaterialTimePicker;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
+import com.progmobklp12.aplikasipresensi.model.mahasiswa.RegisterMahasiswaResponse;
 import com.progmobklp12.aplikasipresensi.model.presensi.PresensiCreateResponse;
-import com.progmobklp12.aplikasipresensi.model.presensi.PresensiEditResponse;
 
-import java.text.ParseException;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EditPresensiActivity extends AppCompatActivity {
+public class CreatePresensi extends AppCompatActivity {
 
     private TextInputEditText namaPresensiField;
     private TextInputEditText keteranganPresensiField;
@@ -41,7 +42,7 @@ public class EditPresensiActivity extends AppCompatActivity {
     private TextInputEditText waktuPresensiOpen;
     private TextInputEditText waktuPresensiClose;
 
-    private Button updatePresensiButton;
+    private Button createPresensiButton;
 
     MaterialDatePicker.Builder materialDateBuilderTanggalOpen;
     MaterialDatePicker.Builder materialDateBuilderTanggalClose;
@@ -55,69 +56,37 @@ public class EditPresensiActivity extends AppCompatActivity {
 
     private SimpleDateFormat timeFormatter;
     private SimpleDateFormat dateFormatter;
-    private SimpleDateFormat editDateFormatter;
-
     private Date waktuOpen;
     private Date waktuClose;
 
     @TimeFormat
     private int clockFormat;
 
-    private Date tanggalOpen;
-    private Date tanggalClose;
-
-    private String presensiNameKey = "PRESENSINAME";
-    private String presensiDescKey = "PRESENSIDESC";
-    private String presensiDateOpenKey = "PRESENSIDATEOPEN";
-    private String presensiDateCloseKey = "PRESENSIDATECLOSE";
-    private String presensiIdKey = "PRESENSIID";
-
-    private int idPresensi;
-
+    private String username;
+    SharedPreferences loginPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_presensi);
+        setContentView(R.layout.activity_create_presensi);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        namaPresensiField = findViewById(R.id.update_presensi_name_text_field);
-        keteranganPresensiField = findViewById(R.id.update_presensi_desc_text_field);
-        tanggalPresensiOpen = findViewById(R.id.update_presensi_date_open_text_field);
-        tanggalPresensiClose = findViewById(R.id.update_presensi_date_closed_text_field);
-        waktuPresensiOpen = findViewById(R.id.update_presensi_time_open_text_field);
-        waktuPresensiClose = findViewById(R.id.update_presensi_time_close_text_field);
-        updatePresensiButton = findViewById(R.id.update_presensi_button);
+        namaPresensiField = findViewById(R.id.presensi_name_text_field);
+        keteranganPresensiField = findViewById(R.id.presensi_desc_text_field);
+        tanggalPresensiOpen = findViewById(R.id.presensi_date_open_text_field);
+        tanggalPresensiClose = findViewById(R.id.presensi_date_closed_text_field);
+        waktuPresensiOpen = findViewById(R.id.presensi_time_open_text_field);
+        waktuPresensiClose = findViewById(R.id.presensi_time_close_text_field);
+        createPresensiButton = findViewById(R.id.create_presensi_button);
+
+        loginPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        username = loginPreferences.getString("username", "kosong");
 
         clockFormat = TimeFormat.CLOCK_24H;
         Calendar cal = Calendar.getInstance();
 
         timeFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        editDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
-        Bundle extras = getIntent().getExtras();
-
-        namaPresensiField.setText(extras.getString(presensiNameKey));
-        keteranganPresensiField.setText(extras.getString(presensiDescKey));
-        Log.d("tanggal", extras.getString(presensiDateCloseKey));
-
-        try {
-            tanggalOpen = editDateFormatter.parse(extras.getString(presensiDateOpenKey));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-            tanggalClose = editDateFormatter.parse(extras.getString(presensiDateCloseKey));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        tanggalPresensiOpen.setText(dateFormatter.format(tanggalOpen));
-        tanggalPresensiClose.setText(dateFormatter.format(tanggalClose));
-        waktuPresensiOpen.setText(timeFormatter.format(tanggalOpen));
-        waktuPresensiClose.setText(timeFormatter.format(tanggalClose));
-        idPresensi = extras.getInt(presensiIdKey);
 
         materialTimePickerBuliderWaktuOpen = new MaterialTimePicker.Builder();
         materialTimePickerBuliderWaktuOpen.setTimeFormat(clockFormat);
@@ -272,34 +241,36 @@ public class EditPresensiActivity extends AppCompatActivity {
             }
         });
 
-        updatePresensiButton.setOnClickListener(new View.OnClickListener() {
+        createPresensiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updatePresensi();
+                createPresensi();
             }
         });
     }
-    public void updatePresensi() {
-        BaseApi editPresensiApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
-        Call<PresensiEditResponse> presensiEditResponseCall = editPresensiApi.editPresensi(idPresensi, namaPresensiField.getText().toString(),
+
+    public void createPresensi() {
+        BaseApi createPresensiApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
+        Call<PresensiCreateResponse> presensiCreateResponseCall = createPresensiApi.createPresensi(username,namaPresensiField.getText().toString(),
                 keteranganPresensiField.getText().toString(), (tanggalPresensiOpen.getText().toString() + " " + waktuPresensiOpen.getText().toString()),
                 (tanggalPresensiClose.getText().toString() + " " + waktuPresensiClose.getText().toString()));
-        presensiEditResponseCall.enqueue(new Callback<PresensiEditResponse>() {
+        presensiCreateResponseCall.enqueue(new Callback<PresensiCreateResponse>() {
             @Override
-            public void onResponse(Call<PresensiEditResponse> call, Response<PresensiEditResponse> response) {
-                if (response.body().getMessage().equals("Data berhasil di Update")) {
-                    Toast.makeText(getApplicationContext(), "Presensi berhasil di update!", Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<PresensiCreateResponse> call, Response<PresensiCreateResponse> response) {
+                if (response.body().getMessage().equals("Presensi Berhasil di Buat")) {
+                    Toast.makeText(getApplicationContext(), "Presensi berhasil di buat!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Presensi gagal di update", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Presensi gagal di Buat", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<PresensiEditResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Presensi gagal di update", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<PresensiCreateResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Presensi gagal di Buat", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }

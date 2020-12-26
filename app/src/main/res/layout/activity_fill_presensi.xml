@@ -4,83 +4,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.FillPresensiActivity">
+    tools:context=".activity.mahasiswa.FillPresensiActivity">
+
 
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Title, secondary and supporting text -->
+        <TextView
+            android:id="@+id/presensi_title_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:text="Placeholder presensi title"
+            android:textAppearance="?attr/textAppearanceHeadline6" />
 
-            <!-- Title, secondary and supporting text -->
-            <TextView
-                android:id="@+id/presensi_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Placeholder welcome siapa je usernya gt mungking"
-                android:textAppearance="?attr/textAppearanceHeadline6" />
+        <TextView
+            android:id="@+id/presensi_desc_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Deskripsi presensi"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary" />
 
-            <TextView
-                android:id="@+id/presensi_detail_date_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Apaje misal ntar disini, kasi card2 kek stat gitu bagus keknya"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/presensi_open_date_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Date open/close placeholder"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <TextView
+            android:id="@+id/presensi_close_date_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Date open/close placeholder"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <TextView
+            android:id="@+id/presensi_owner_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Pemilik presensi:"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary" />
     </LinearLayout>
 
-    <LinearLayout
+
+    <Button
+        android:id="@+id/fill_presensi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Isi presensi"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
-        <RadioGroup
-            android:id="@+id/fill_presensi_radio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:checkedButton="@+id/radio_button_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-            <RadioButton
-                android:id="@+id/fill_presensi_radio_hadir"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Hadir" />
-
-            <RadioButton
-                android:id="@+id/fill_presensi_radio_tidak_hadir"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Tidak Hadir" />
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/containedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            />
-    </LinearLayout>
 
 
 

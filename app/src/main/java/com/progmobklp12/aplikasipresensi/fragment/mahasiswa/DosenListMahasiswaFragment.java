@@ -1,27 +1,21 @@
-package com.progmobklp12.aplikasipresensi.fragment;
+package com.progmobklp12.aplikasipresensi.fragment.mahasiswa;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.progmobklp12.aplikasipresensi.R;
-import com.progmobklp12.aplikasipresensi.activity.dosen.EditProfileDosenActivity;
 import com.progmobklp12.aplikasipresensi.adapter.DosenListAdapter;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
@@ -34,15 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static java.lang.String.valueOf;
-
-public class DosenListFragment extends Fragment {
-
-    SharedPreferences loginPreferences;
-    private Button editProfile;
-    private TextView namaUserView;
-    private TextView nipUserView;
-    private TextView usernameView;
+public class DosenListMahasiswaFragment extends Fragment {
 
     private String namaUser;
     private String nipUser;
@@ -58,47 +44,35 @@ public class DosenListFragment extends Fragment {
     private FloatingActionButton refreshData;
 
     private TextView listKosong;
+
     View v;
 
-
-    public DosenListFragment() {
+    public DosenListMahasiswaFragment() {
         // Required empty public constructor
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dosenArrayList = new ArrayList<>();
         getAllDosen();
-        Log.d("dosen", valueOf(dosenArrayList.size()));
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        v = inflater.inflate(R.layout.fragment_dosen_list_mahasiswa, container, false);
 
-        v = inflater.inflate(R.layout.fragment_dosen_list, container, false);
+        refreshData = v.findViewById(R.id.dosen_list_refresh_mahasiswa_fab);
 
-        editProfile = v.findViewById(R.id.dosen_edit_profile);
-        namaUserView = v.findViewById(R.id.dosen_name_text);
-        nipUserView = v.findViewById(R.id.dosen_nip);
-        usernameView = v.findViewById(R.id.dosen_username);
-        refreshData = v.findViewById(R.id.dosen_list_refresh);
-
-        recyclerView = v.findViewById(R.id.dosen_list_recycler_view);
+        recyclerView = v.findViewById(R.id.dosen_list_recycler_mahasiswa_view);
         dosenListAdapter = new DosenListAdapter(this.getActivity(), dosenArrayList);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(dosenListAdapter);
-
-        loginPreferences = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
-        namaUser = loginPreferences.getString("nama", "kosong");
-        nipUser = loginPreferences.getString("nip", "kosong");
-        username = loginPreferences.getString("username", "kosong");
-
-        namaUserView.setText(String.format("Nama: %1$s", namaUser));
-        nipUserView.setText(String.format("NIP: %1$s", nipUser));
-        usernameView.setText(String.format("Username: %1$s", username));
 
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,27 +82,7 @@ public class DosenListFragment extends Fragment {
             }
         });
 
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent editProfile =  new Intent(getActivity(), EditProfileDosenActivity.class);
-                startActivityForResult(editProfile, 1);
-            }
-        });
         return v;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == 2) {
-            namaUser = loginPreferences.getString("nama", "kosong");
-            nipUser = loginPreferences.getString("nip", "kosong");
-            username = loginPreferences.getString("username", "kosong");
-            namaUserView.setText(String.format("Nama: %1$s", namaUser));
-            nipUserView.setText(String.format("NIP: %1$s", nipUser));
-            usernameView.setText(String.format("Username: %1$s", username));
-        }
     }
 
     public void getAllDosen() {

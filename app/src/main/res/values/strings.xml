@@ -2,8 +2,7 @@
     <string name="app_name">PresensiKu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="about">Tentang aplikasi</string>
-    <string name="about_activity_title">Tentang Aplikasi Presensi</string>
-    <string name="app_version_about_activity">Versi %1$s</string>
+    <string name="about_activity_title">Tentang PresensiKu</string>
     <string name="made_by_about_activity">Made with ❤ By Kelompok 12 Praktikum Pemrograman Mobile</string>
     <string name="presensi_name_form_hint">Nama Presensi</string>
     <string name="presensi_desc_form_hint">Deskripsi Presensi</string>
@@ -12,4 +11,5 @@
     <string name="presensi_add_button_text">Tambahkan presensi</string>
     <string name="role_login_dropdown_mahasiswa">Mahasiswa</string>
     <string name="login_role_dropdown_dosen">Dosen</string>
+    <string name="version_string">Versi %1$s</string>
 </resources>

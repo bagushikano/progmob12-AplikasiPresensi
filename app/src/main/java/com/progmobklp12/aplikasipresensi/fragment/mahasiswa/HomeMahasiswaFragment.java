@@ -1,4 +1,4 @@
-package com.progmobklp12.aplikasipresensi.fragment;
+package com.progmobklp12.aplikasipresensi.fragment.mahasiswa;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,18 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.progmobklp12.aplikasipresensi.R;
-import com.progmobklp12.aplikasipresensi.adapter.PresensiListAdapter;
+import com.progmobklp12.aplikasipresensi.adapter.PresensiListMahasiswaAdapter;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
 import com.progmobklp12.aplikasipresensi.model.presensi.Presensi;
-import com.progmobklp12.aplikasipresensi.model.presensi.PresensiDosenResponse;
+import com.progmobklp12.aplikasipresensi.model.presensi.PresensiMahasiswaResponse;
 
 import java.util.ArrayList;
 
@@ -30,7 +28,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+
+public class HomeMahasiswaFragment extends Fragment {
+
     SharedPreferences loginPreferences;
     private TextView welcomeText;
     private String namaUser;
@@ -40,19 +40,26 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Presensi> presensiArrayList;
 
-    private PresensiListAdapter presensiListAdapter;
+    private PresensiListMahasiswaAdapter presensiListMahasiswaAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
-    public HomeFragment() {
+
+    public HomeMahasiswaFragment() {
         // Required empty public constructor
     }
 
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_home, container, false);
+        v = inflater.inflate(R.layout.fragment_home_mahasiswa, container, false);
 
         refreshData = v.findViewById(R.id.presensi_open_refresh);
 
@@ -63,34 +70,33 @@ public class HomeFragment extends Fragment {
         welcomeText.setText(String.format("Selamat datang %1$s!", namaUser));
 
         presensiArrayList = new ArrayList<>();
-        getDosenPresensiOpen();
+        getMahasiswaPresensiOpen();
         recyclerView = v.findViewById(R.id.presensi_open_list);
-        presensiListAdapter = new PresensiListAdapter(this.getActivity(), presensiArrayList);
+        presensiListMahasiswaAdapter = new PresensiListMahasiswaAdapter(this.getActivity(), presensiArrayList);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(presensiListAdapter);
+        recyclerView.setAdapter(presensiListMahasiswaAdapter);
 
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presensiArrayList.clear();
-                getDosenPresensiOpen();
+                getMahasiswaPresensiOpen();
             }
         });
 
         return v;
     }
 
-
-    public void getDosenPresensiOpen() {
+    public void getMahasiswaPresensiOpen() {
         BaseApi getPresensiOpen = RetrofitClient.buildRetrofit().create(BaseApi.class);
-        Call<PresensiDosenResponse> presensiDosenOpenResponseCall = getPresensiOpen.listPresensiOpenDosen(username);
-        presensiDosenOpenResponseCall.enqueue(new Callback<PresensiDosenResponse>() {
+        Call<PresensiMahasiswaResponse> presensiMahasiswaOpenResponseCall = getPresensiOpen.listPresensiOpenMahasiswa();
+        presensiMahasiswaOpenResponseCall.enqueue(new Callback<PresensiMahasiswaResponse>() {
             @Override
-            public void onResponse(Call<PresensiDosenResponse> call, Response<PresensiDosenResponse> response) {
-                if (response.body().getMessage().equals("Presensi berhasil di tampilkan")) {
+            public void onResponse(Call<PresensiMahasiswaResponse> call, Response<PresensiMahasiswaResponse> response) {
+                if (response.body().getMessage().equals("List Absensi berhasil ditampilkan")) {
                     presensiArrayList.addAll(response.body().getData());
-                    presensiListAdapter.notifyDataSetChanged();
+                    presensiListMahasiswaAdapter.notifyDataSetChanged();
                     Snackbar.make(v, "Data presensi terbuka berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
@@ -100,11 +106,9 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PresensiDosenResponse> call, Throwable t) {
+            public void onFailure(Call<PresensiMahasiswaResponse> call, Throwable t) {
                 Snackbar.make(v, "Data presensi terbuka gagal di refresh!", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
-
-
 }

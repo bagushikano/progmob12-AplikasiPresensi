@@ -1,4 +1,4 @@
-package com.progmobklp12.aplikasipresensi.activity;
+package com.progmobklp12.aplikasipresensi.activity.dosen;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +18,13 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.progmobklp12.aplikasipresensi.R;
+import com.progmobklp12.aplikasipresensi.activity.AboutActivity;
+import com.progmobklp12.aplikasipresensi.activity.LoginActivity;
 import com.progmobklp12.aplikasipresensi.adapter.HomeFragmentAdapter;
-import com.progmobklp12.aplikasipresensi.fragment.DosenListFragment;
-import com.progmobklp12.aplikasipresensi.fragment.HomeFragment;
-import com.progmobklp12.aplikasipresensi.fragment.MahasiswaListFragment;
-import com.progmobklp12.aplikasipresensi.fragment.PresensiFragment;
+import com.progmobklp12.aplikasipresensi.fragment.dosen.DosenListFragment;
+import com.progmobklp12.aplikasipresensi.fragment.dosen.HomeFragment;
+import com.progmobklp12.aplikasipresensi.fragment.dosen.MahasiswaListFragment;
+import com.progmobklp12.aplikasipresensi.fragment.dosen.PresensiFragment;
 
 public class HomeActivity extends AppCompatActivity {
 

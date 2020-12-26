@@ -1,4 +1,4 @@
-package com.progmobklp12.aplikasipresensi.fragment;
+package com.progmobklp12.aplikasipresensi.fragment.dosen;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,14 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.progmobklp12.aplikasipresensi.R;
-import com.progmobklp12.aplikasipresensi.activity.CreatePresensi;
+import com.progmobklp12.aplikasipresensi.activity.dosen.CreatePresensi;
 import com.progmobklp12.aplikasipresensi.adapter.PresensiListAdapter;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;

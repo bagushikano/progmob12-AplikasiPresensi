@@ -10,7 +10,7 @@ public class UpdateProfileDosenResponse {
     private String message;
     @SerializedName("data")
     @Expose
-    private List<UpdateProfileDosenData> data;
+    private List<Dosen> data;
 
     public String getMessage() {
         return message;
@@ -20,11 +20,11 @@ public class UpdateProfileDosenResponse {
         this.message = message;
     }
 
-    public List<UpdateProfileDosenData> getData() {
+    public List<Dosen> getData() {
         return data;
     }
 
-    public void setData(List<UpdateProfileDosenData> data) {
+    public void setData(List<Dosen> data) {
         this.data = data;
     }
 

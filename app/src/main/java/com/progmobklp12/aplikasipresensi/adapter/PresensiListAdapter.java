@@ -13,14 +13,11 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.progmobklp12.aplikasipresensi.R;
-import com.progmobklp12.aplikasipresensi.activity.DetailPresensiActivity;
-import com.progmobklp12.aplikasipresensi.activity.EditPresensiActivity;
-import com.progmobklp12.aplikasipresensi.activity.HomeActivity;
+import com.progmobklp12.aplikasipresensi.activity.dosen.DetailPresensiActivity;
+import com.progmobklp12.aplikasipresensi.activity.dosen.EditPresensiActivity;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
-import com.progmobklp12.aplikasipresensi.fragment.HomeFragment;
 import com.progmobklp12.aplikasipresensi.model.MessageResponseModel;
-import com.progmobklp12.aplikasipresensi.model.dosen.ListDosenResponse;
 import com.progmobklp12.aplikasipresensi.model.presensi.Presensi;
 
 import java.util.ArrayList;
@@ -197,7 +194,4 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
             });
         }
     }
-
-
-
 }

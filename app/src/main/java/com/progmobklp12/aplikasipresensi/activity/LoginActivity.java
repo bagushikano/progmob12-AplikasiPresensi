@@ -14,9 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.progmobklp12.aplikasipresensi.R;
+import com.progmobklp12.aplikasipresensi.activity.dosen.HomeActivity;
+import com.progmobklp12.aplikasipresensi.activity.mahasiswa.HomeMahasiswaActivity;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
 import com.progmobklp12.aplikasipresensi.model.dosen.LoginDosenResponse;
@@ -59,7 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         else if (loginStatus == 2) { //mahasiswa
-
+            Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", namaUser), Toast.LENGTH_SHORT).show();
+            Intent homeActivityMahasiswa = new Intent(getApplicationContext(), HomeMahasiswaActivity.class);
+            startActivity(homeActivityMahasiswa);
+            finish();
         }
 
         String[] loginRole = new String[] {getString(R.string.role_login_dropdown_mahasiswa), getString(R.string.login_role_dropdown_dosen)};
@@ -121,11 +125,9 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("nim", nim);
                     editor.apply();
                     Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
-                    Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
-                    startActivity(homeActivity);
+                    Intent homeActivityMahasiswa = new Intent(getApplicationContext(), HomeMahasiswaActivity.class);
+                    startActivity(homeActivityMahasiswa);
                     finish();
-                    //TODO ganti activity untuk mahasiswa nya
-
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Login gagal silahkan cek password dan username", Toast.LENGTH_SHORT).show();

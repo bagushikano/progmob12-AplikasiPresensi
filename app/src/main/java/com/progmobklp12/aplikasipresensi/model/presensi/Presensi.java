@@ -2,6 +2,7 @@ package com.progmobklp12.aplikasipresensi.model.presensi;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.progmobklp12.aplikasipresensi.model.dosen.Dosen;
 
 public class Presensi {
     @SerializedName("id_presensi")
@@ -25,6 +26,9 @@ public class Presensi {
     @SerializedName("is_open")
     @Expose
     private Integer isOpen;
+    @SerializedName("dosen")
+    @Expose
+    private Dosen dosen;
 
     public Integer getIdPresensi() {
         return idPresensi;
@@ -80,5 +84,13 @@ public class Presensi {
 
     public void setIsOpen(Integer isOpen) {
         this.isOpen = isOpen;
+    }
+
+    public Dosen getDosen() {
+        return dosen;
+    }
+
+    public void setDosen(Dosen dosen) {
+        this.dosen = dosen;
     }
 }

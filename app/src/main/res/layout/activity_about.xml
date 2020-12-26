@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/app_version_about_activity"
+        android:text="@string/version_string"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
         app:layout_constraintTop_toBottomOf="@+id/nama_aplikasi" />
@@ -58,6 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
+        android:gravity="center"
         android:text="@string/made_by_about_activity"
         android:minLines="2"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
@@ -69,7 +70,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="asasasasas"
+        android:gravity="center"
+        android:text="Made Bandem Yosita Rahayu W. (1504505064)"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
         app:layout_constraintTop_toBottomOf="@+id/developer" />
@@ -79,7 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="asasasaasasasas"
+        android:gravity="center"
+        android:text="Putu Alta Saputra (1805551021)"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
@@ -89,8 +92,9 @@
         android:id="@+id/name_ketiga"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_marginTop="8dp"
-        android:text="asasasasasasas"
+        android:text="Anak Agung Bagus Wiryadika (1805551059)"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
         app:layout_constraintTop_toBottomOf="@+id/name_kedua" />
@@ -100,28 +104,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="asasasasasasasasasasasasasasasas"
+        android:gravity="center"
+        android:text="Ida Bagus Rama Ditya Pradnyana (1805551065)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
         app:layout_constraintTop_toBottomOf="@+id/name_ketiga"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageButton
-        android:id="@+id/finduson_github"
-        style="@android:style/Widget.DeviceDefault.ImageButton"
-        android:layout_width="161dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="32dp"
-        android:background="?attr/selectableItemBackground"
-        android:focusable="true"
-        android:scaleType="centerInside"
+    <TextView
+        android:id="@+id/name_kelima"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="I Gusti Ayu Sintha Adelia Pratiwi (1805551104)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
         app:layout_constraintStart_toStartOf="@+id/app_icon_about"
-        app:layout_constraintTop_toBottomOf="@+id/name_keempat" />
+        app:layout_constraintTop_toBottomOf="@+id/name_keempat"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/name_keenam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="Efraim William Solang (1805551148)"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/app_icon_about"
+        app:layout_constraintStart_toStartOf="@+id/app_icon_about"
+        app:layout_constraintTop_toBottomOf="@+id/name_kelima"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

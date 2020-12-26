@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.dosen.PresensiFragment">
+    tools:context=".fragment.mahasiswa.PresensiMahasiswaFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Daftar presensi anda"
+            android:text="Daftar semua presensi"
             android:textAppearance="?attr/textAppearanceHeadline6" />
 
 
@@ -36,22 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="90dp"
+        android:layout_margin="@dimen/fab_margin"
         app:tint="@android:color/white"
         app:srcCompat="@drawable/ic_baseline_refresh_24" />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/presensi_detail_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginEnd="41dp"
-        android:layout_marginRight="41dp"
-        android:layout_marginBottom="49dp"
-        app:tint="@android:color/white"
-        app:srcCompat="@android:drawable/ic_input_add" />
 
 </FrameLayout>

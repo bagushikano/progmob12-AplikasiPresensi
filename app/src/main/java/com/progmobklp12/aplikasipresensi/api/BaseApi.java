@@ -3,16 +3,17 @@ package com.progmobklp12.aplikasipresensi.api;
 import com.progmobklp12.aplikasipresensi.model.MessageResponseModel;
 import com.progmobklp12.aplikasipresensi.model.dosen.ListDosenResponse;
 import com.progmobklp12.aplikasipresensi.model.dosen.LoginDosenResponse;
-import com.progmobklp12.aplikasipresensi.model.dosen.UpdatePasswordDosenResponse;
 import com.progmobklp12.aplikasipresensi.model.dosen.UpdateProfileDosenResponse;
 import com.progmobklp12.aplikasipresensi.model.mahasiswa.ListMahasiswaResponse;
 import com.progmobklp12.aplikasipresensi.model.mahasiswa.LoginMahasiswaResponse;
 import com.progmobklp12.aplikasipresensi.model.dosen.RegisterDosenResponse;
 import com.progmobklp12.aplikasipresensi.model.mahasiswa.RegisterMahasiswaResponse;
+import com.progmobklp12.aplikasipresensi.model.mahasiswa.UpdateProfileMahasiswaResponse;
 import com.progmobklp12.aplikasipresensi.model.presensi.DetailPresensiResponse;
 import com.progmobklp12.aplikasipresensi.model.presensi.PresensiCreateResponse;
 import com.progmobklp12.aplikasipresensi.model.presensi.PresensiDosenResponse;
 import com.progmobklp12.aplikasipresensi.model.presensi.PresensiEditResponse;
+import com.progmobklp12.aplikasipresensi.model.presensi.PresensiMahasiswaResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -54,15 +55,15 @@ public interface BaseApi {
     @GET("dosen/all")
     Call<ListDosenResponse> listDosenAll();
 
-    //mahasiswa stuff
-
     @FormUrlEncoded
     @POST("update/dosen/password/{username}")
-    Call<UpdatePasswordDosenResponse> updatePasswordDosen(
+    Call<MessageResponseModel> updatePasswordDosen(
             @Path("username") String username,
             @Field("oldPassword") String oldPassword,
             @Field("newPassword") String newPassword
     );
+
+    //mahasiswa stuff
 
     @FormUrlEncoded
     @POST("mahasiswa/login")
@@ -75,8 +76,26 @@ public interface BaseApi {
     @POST("mahasiswa/register")
     Call<RegisterMahasiswaResponse> registerMahasiswa(
             @Field("nama") String nama,
-            @Field("nim") String nip,
+            @Field("nim") String nim,
             @Field("username") String username,
+            @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @POST("update/mahasiswa/password/{username}")
+    Call<MessageResponseModel> updatePasswordMahasiswa(
+            @Path("username") String username,
+            @Field("oldPassword") String oldPassword,
+            @Field("newPassword") String newPassword
+    );
+
+    @FormUrlEncoded
+    @POST("update/mahasiswa/{usernameOld}")
+    Call<UpdateProfileMahasiswaResponse> editProfileMahasiswa(
+            @Path("usernameOld") String usernameOld,
+            @Field("nama") String nama,
+            @Field("nim") String nim,
+            @Field("username") String usernameNew,
             @Field("password") String password
     );
 
@@ -84,6 +103,12 @@ public interface BaseApi {
     Call<ListMahasiswaResponse> listMahasiswaAll();
 
     // presensi stuff
+
+    @GET("presensi/mahasiswa/open/")
+    Call<PresensiMahasiswaResponse> listPresensiOpenMahasiswa();
+
+    @GET("presensi/mahasiswa/all")
+    Call<PresensiMahasiswaResponse> listPresensiMahasiswa();
 
     @GET("presensi/all/open/{dosen}")
     Call<PresensiDosenResponse> listPresensiOpenDosen(
@@ -98,6 +123,20 @@ public interface BaseApi {
     @POST("presensi/close/{presensi}")
     Call<MessageResponseModel> closePresensi(
             @Path("presensi") int presensi
+    );
+
+    @FormUrlEncoded
+    @POST("presensi/mahasiswa/detail/")
+    Call<DetailPresensiResponse> detailPresensiMahasiswa(
+            @Field("mahasiswa") String username,
+            @Field("presensi") int presensi
+    );
+
+    @FormUrlEncoded
+    @POST("presensi/mahasiswa/sign")
+    Call<MessageResponseModel> signPresensiMahasiswa(
+            @Field("username") String username,
+            @Field("id_presensi") int presensi
     );
 
     @POST("presensi/open/{presensi}")

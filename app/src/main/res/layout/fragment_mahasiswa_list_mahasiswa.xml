@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.dosen.DosenListFragment">
+    tools:context=".fragment.mahasiswa.MahasiswaListMahasiswaFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,14 +27,14 @@
 
                 <!-- Title, secondary and supporting text -->
                 <TextView
-                    android:id="@+id/dosen_text"
+                    android:id="@+id/mahasiswa_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profile saya"
                     android:textAppearance="?attr/textAppearanceHeadline6" />
 
                 <TextView
-                    android:id="@+id/dosen_name_text"
+                    android:id="@+id/mahasiswa_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -42,7 +42,7 @@
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary" />
                 <TextView
-                    android:id="@+id/dosen_nip"
+                    android:id="@+id/mahasiswa_nim_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -50,7 +50,7 @@
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary"/>
                 <TextView
-                    android:id="@+id/dosen_username"
+                    android:id="@+id/mahasiswa_username_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -59,7 +59,7 @@
                     android:textColor="?android:attr/textColorSecondary"/>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/dosen_edit_profile"
+                    android:id="@+id/mahasiswa_edit_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -74,13 +74,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="Daftar semua dosen"
+            android:text="Daftar semua mahasiswa"
             android:textAppearance="?attr/textAppearanceHeadline6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dosen_list_recycler_view"
+            android:id="@+id/mahasiswa_list_recycler_mahasiswa_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -91,7 +91,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/dosen_list_refresh"
+            android:id="@+id/mahasiswa_list_refresh_mahasiswa_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

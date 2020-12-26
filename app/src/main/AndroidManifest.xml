@@ -14,32 +14,41 @@
         android:theme="@style/Theme.BliApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.EditPresensiActivity"
+            android:name=".activity.mahasiswa.DetailFilledPresensiActivity"
+            android:label="Detail pengisian presensi">
+        </activity>
+        <activity android:name=".activity.mahasiswa.HomeMahasiswaActivity"></activity>
+        <activity
+            android:name=".activity.dosen.EditPresensiActivity"
             android:label="Update presensi">
         </activity>
-        <activity android:name=".activity.mahasiswa.ChangePasswordMahasiswaActivity">
-
-        </activity>
+        <activity
+            android:name=".activity.mahasiswa.ChangePasswordMahasiswaActivity"
+            android:label="Ganti password"></activity>
         <activity
             android:name=".activity.dosen.ChangePasswordDosenActivity"
             android:label="Ganti password" />
-        <activity android:name=".activity.mahasiswa.EditProfileMahasiswaActivity" />
+        <activity
+            android:name=".activity.mahasiswa.EditProfileMahasiswaActivity"
+            android:title="Update profile"/>
         <activity
             android:name=".activity.dosen.EditProfileDosenActivity"
             android:label="Update profile" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.FillPresensiActivity" />
         <activity
-            android:name=".activity.CreatePresensi"
+            android:name=".activity.mahasiswa.FillPresensiActivity"
+            android:label="Isi presensi" />
+        <activity
+            android:name=".activity.dosen.CreatePresensi"
             android:label="Tambahkan presensi baru" />
         <activity
-            android:name=".activity.DetailPresensiActivity"
+            android:name=".activity.dosen.DetailPresensiActivity"
             android:label="Detail presensi" />
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BliApp.NoActionBar" />
-        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.dosen.HomeActivity" />
         <activity
             android:name=".activity.AboutActivity"
             android:theme="@style/Theme.BliApp.NoActionBar" />

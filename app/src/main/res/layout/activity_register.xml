@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textVisiblePassword"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +140,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Login"
+        android:text="Register"
         app:layout_constraintEnd_toEndOf="@+id/password_form"
         app:layout_constraintStart_toStartOf="@+id/password_form"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />

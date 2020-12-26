@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.dosen.HomeActivity">
+    tools:context=".activity.mahasiswa.HomeMahasiswaActivity">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/home_tab_bar"
+        android:id="@+id/mahasiswa_home_tab_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,14 +16,14 @@
         app:tabMode="fixed">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/home_tab"
+            android:id="@+id/mahasiswa_home_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_baseline_home_24"
             android:text="Home" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/presensi_tab"
+            android:id="@+id/mahasiswa_presensi_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_baseline_assignment_24"
@@ -31,11 +31,13 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/home_view_pager"
+        android:id="@+id/mahasiswa_home_view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_tab_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/mahasiswa_home_tab_bar" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

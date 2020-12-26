@@ -1,15 +1,16 @@
-package com.progmobklp12.aplikasipresensi.model.mahasiswa;
+package com.progmobklp12.aplikasipresensi.model.presensi;
 
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RegisterMahasiswaResponse {
+public class PresensiMahasiswaResponse {
     @SerializedName("message")
     @Expose
     private String message;
     @SerializedName("data")
     @Expose
-    private Mahasiswa data;
+    private List<Presensi> data;
 
     public String getMessage() {
         return message;
@@ -19,11 +20,11 @@ public class RegisterMahasiswaResponse {
         this.message = message;
     }
 
-    public Mahasiswa getData() {
+    public List<Presensi> getData() {
         return data;
     }
 
-    public void setData(Mahasiswa data) {
+    public void setData(List<Presensi> data) {
         this.data = data;
     }
 }

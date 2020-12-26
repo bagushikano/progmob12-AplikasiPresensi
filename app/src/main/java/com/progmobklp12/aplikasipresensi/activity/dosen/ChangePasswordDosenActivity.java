@@ -13,7 +13,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
-import com.progmobklp12.aplikasipresensi.model.dosen.UpdatePasswordDosenResponse;
+import com.progmobklp12.aplikasipresensi.model.MessageResponseModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,11 +54,11 @@ public class ChangePasswordDosenActivity extends AppCompatActivity {
 
     public void updatePasswordDosen() {
         BaseApi updatePassword = RetrofitClient.buildRetrofit().create(BaseApi.class);
-        Call<UpdatePasswordDosenResponse> updatePasswordDosenResponseCall = updatePassword.updatePasswordDosen(username,
+        Call<MessageResponseModel> updatePasswordDosenResponseCall = updatePassword.updatePasswordDosen(username,
                 oldPassword.getText().toString(), newPassword.getText().toString());
-        updatePasswordDosenResponseCall.enqueue(new Callback<UpdatePasswordDosenResponse>() {
+        updatePasswordDosenResponseCall.enqueue(new Callback<MessageResponseModel>() {
             @Override
-            public void onResponse(Call<UpdatePasswordDosenResponse> call, Response<UpdatePasswordDosenResponse> response) {
+            public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
                 if(response.body().getMessage() != null ) {
                     if (response.body().getMessage().equals("Password berhasil di Update")) {
                         Toast.makeText(getApplicationContext(), String.format("Password berhasil di update!"), Toast.LENGTH_SHORT).show();
@@ -74,7 +74,7 @@ public class ChangePasswordDosenActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UpdatePasswordDosenResponse> call, Throwable t) {
+            public void onFailure(Call<MessageResponseModel> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Password gagal di update", Toast.LENGTH_SHORT).show();
             }
         });

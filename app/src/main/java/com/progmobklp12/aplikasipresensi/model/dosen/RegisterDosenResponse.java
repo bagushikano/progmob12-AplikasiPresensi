@@ -9,7 +9,7 @@ public class RegisterDosenResponse {
     private String message;
     @SerializedName("data")
     @Expose
-    private RegisterDosenData data;
+    private Dosen data;
 
     public String getMessage() {
         return message;
@@ -19,11 +19,11 @@ public class RegisterDosenResponse {
         this.message = message;
     }
 
-    public RegisterDosenData getData() {
+    public Dosen getData() {
         return data;
     }
 
-    public void setData(RegisterDosenData data) {
+    public void setData(Dosen data) {
         this.data = data;
     }
 }

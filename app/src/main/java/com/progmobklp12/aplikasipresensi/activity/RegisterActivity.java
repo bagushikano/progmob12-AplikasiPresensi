@@ -80,8 +80,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerDosen() {
         BaseApi registerDosenApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
-        Log.d("username", username.toString());
-        Log.d("password", password.toString());
         Call<RegisterDosenResponse> registerDosenResponseCall = registerDosenApi.registerDosen(nama.getText().toString(), noInduk.getText().toString(),
                 username.getText().toString(), password.getText().toString());
         registerDosenResponseCall.enqueue(new Callback<RegisterDosenResponse>() {
@@ -107,8 +105,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerMahasiswa() {
         BaseApi registerMahasiswaApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
-        Log.d("username", username.toString());
-        Log.d("password", password.toString());
         Call<RegisterMahasiswaResponse> registerMahasiswaResponseCall = registerMahasiswaApi.registerMahasiswa(nama.getText().toString(), noInduk.getText().toString(),
                 username.getText().toString(), password.getText().toString());
         registerMahasiswaResponseCall.enqueue(new Callback<RegisterMahasiswaResponse>() {
