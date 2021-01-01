@@ -3,6 +3,7 @@ package com.progmobklp12.aplikasipresensi.fragment.dosen;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.progmobklp12.aplikasipresensi.App;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.activity.dosen.EditProfileDosenActivity;
 import com.progmobklp12.aplikasipresensi.adapter.DosenListAdapter;
@@ -27,6 +29,7 @@ import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
 import com.progmobklp12.aplikasipresensi.model.dosen.Dosen;
 import com.progmobklp12.aplikasipresensi.model.dosen.ListDosenResponse;
+import com.progmobklp12.aplikasipresensi.model.mahasiswa.Mahasiswa;
 
 import java.util.ArrayList;
 
@@ -60,6 +63,8 @@ public class DosenListFragment extends Fragment {
     private TextView listKosong;
     View v;
 
+    int flagData = 0;
+
 
     public DosenListFragment() {
         // Required empty public constructor
@@ -70,6 +75,9 @@ public class DosenListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         dosenArrayList = new ArrayList<>();
         getAllDosen();
+        if (flagData == 1) {
+            new insertDataDosen().execute();
+        }
     }
 
     @Override
@@ -104,6 +112,7 @@ public class DosenListFragment extends Fragment {
             public void onClick(View v) {
                 dosenArrayList.clear();
                 getAllDosen();
+                // TODO handle refresh data semisal koneksi rusak
             }
         });
 
@@ -139,19 +148,31 @@ public class DosenListFragment extends Fragment {
                 if (response.body().getMessage().equals("List dosen berhasil di tampilkan")) {
                     dosenArrayList.addAll(response.body().getData());
                     dosenListAdapter.notifyDataSetChanged();
+                    flagData = 1;
                     Snackbar.make(v, "List data dosen berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {
                     Snackbar.make(v, "List data dosen gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                    flagData = 0;
                 }
             }
 
             @Override
             public void onFailure(Call<ListDosenResponse> call, Throwable t) {
                 Snackbar.make(v, "List data dosen gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                flagData = 0;
             }
         });
+    }
+
+    public class insertDataDosen extends AsyncTask<Void, Void, Dosen> {
+        @Override
+        protected Dosen doInBackground(Void... voids) {
+            ((App) getActivity().getApplication()).appDatabase.dosenDao().nukeTable();
+            ((App) getActivity().getApplication()).appDatabase.dosenDao().insertAll(dosenArrayList);
+            return null;
+        }
     }
 
 }

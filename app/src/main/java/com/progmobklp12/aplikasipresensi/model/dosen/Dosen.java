@@ -1,20 +1,33 @@
 package com.progmobklp12.aplikasipresensi.model.dosen;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Dosen {
+
     @SerializedName("id_dosen")
     @Expose
+    @PrimaryKey(autoGenerate = true)
     private Integer idDosen;
+
     @SerializedName("nama")
     @Expose
+    @ColumnInfo(name = "nama")
     private String nama;
+
     @SerializedName("nip")
     @Expose
+    @ColumnInfo(name = "nip")
     private String nip;
+
     @SerializedName("username")
     @Expose
+    @ColumnInfo(name = "username")
     private String username;
 
     public Integer getIdDosen() {

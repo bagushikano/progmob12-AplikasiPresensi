@@ -1,5 +1,6 @@
 package com.progmobklp12.aplikasipresensi.fragment.dosen;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.progmobklp12.aplikasipresensi.App;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.adapter.MahasiswaListAdapter;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
@@ -22,6 +24,7 @@ import com.progmobklp12.aplikasipresensi.model.mahasiswa.ListMahasiswaResponse;
 import com.progmobklp12.aplikasipresensi.model.mahasiswa.Mahasiswa;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +42,8 @@ public class MahasiswaListFragment extends Fragment {
     private TextView listKosong;
     View v;
 
+    int flagData = 0;
+
     public MahasiswaListFragment() {
         // Required empty public constructor
     }
@@ -48,6 +53,9 @@ public class MahasiswaListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mahasiswaArrayList = new ArrayList<>();
         getAllMahasiswa();
+        if (flagData == 1) {
+            new insertDataMahasiswa().execute();
+        }
     }
 
     @Override
@@ -69,6 +77,7 @@ public class MahasiswaListFragment extends Fragment {
             public void onClick(View v) {
                 mahasiswaArrayList.clear();
                 getAllMahasiswa();
+                // TODO handle refresh data semisal koneksi rusak
             }
         });
 
@@ -86,18 +95,30 @@ public class MahasiswaListFragment extends Fragment {
                     mahasiswaArrayList.addAll(response.body().getData());
                     mahasiswaListAdapter.notifyDataSetChanged();
                     Snackbar.make(v, "List data mahasiswa berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
+                    flagData = 1;
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {
                     Snackbar.make(v, "List mahasiswa gagal di tampilkan", Snackbar.LENGTH_SHORT).show();
+                    flagData = 0;
                 }
             }
 
             @Override
             public void onFailure(Call<ListMahasiswaResponse> call, Throwable t) {
                 Snackbar.make(v, "List mahasiswa gagal di tampilkan", Snackbar.LENGTH_SHORT).show();
+                flagData = 0;
             }
         });
+    }
+
+    public class insertDataMahasiswa extends AsyncTask<Void, Void, Mahasiswa> {
+        @Override
+        protected Mahasiswa doInBackground(Void... voids) {
+            ((App) getActivity().getApplication()).appDatabase.mahasiswaDao().nukeTable();
+            ((App) getActivity().getApplication()).appDatabase.mahasiswaDao().insertAll(mahasiswaArrayList);
+            return null;
+        }
     }
 
 }

@@ -64,7 +64,6 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
         else {
             holder.openCloseButton.setText("Buka");
         }
-
         //TODO di backendnya update juga tanggal buka sama tutup nya sesuai kapan buka/tutupnya
     }
 
@@ -139,6 +138,7 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
                         public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
                             if (response.body().getMessage().equals("Absensi berhasil di tutup")) {
                                 Toast.makeText(mContext, "Presensi berhasil di tutup", Toast.LENGTH_SHORT).show();
+
                                 openCloseButton.setText("Buka");
                                 //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                             }

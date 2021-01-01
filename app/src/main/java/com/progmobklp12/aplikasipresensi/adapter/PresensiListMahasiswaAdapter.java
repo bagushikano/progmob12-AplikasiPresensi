@@ -3,6 +3,7 @@ package com.progmobklp12.aplikasipresensi.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static java.lang.String.valueOf;
 
 public class PresensiListMahasiswaAdapter extends RecyclerView.Adapter<PresensiListMahasiswaAdapter.ViewHolder> {
     private Context mContext;
@@ -75,6 +78,7 @@ public class PresensiListMahasiswaAdapter extends RecyclerView.Adapter<PresensiL
         detailPresensiResponseCall.enqueue(new Callback<DetailPresensiResponse>() {
             @Override
             public void onResponse(Call<DetailPresensiResponse> call, Response<DetailPresensiResponse> response) {
+                Log.d("duar", valueOf(response.code()));
                 if (response.body().getMessage().equals("Presensi telah di isi")) {
                     holder.fillPresensiButton.setText("Anda telah mengisi presensi ini");
                     holder.fillPresensiButton.setEnabled(false);

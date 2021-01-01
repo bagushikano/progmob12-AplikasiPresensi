@@ -104,7 +104,7 @@ public interface BaseApi {
 
     // presensi stuff
 
-    @GET("presensi/mahasiswa/open/")
+    @GET("presensi/mahasiswa/open")
     Call<PresensiMahasiswaResponse> listPresensiOpenMahasiswa();
 
     @GET("presensi/mahasiswa/all")
@@ -126,7 +126,7 @@ public interface BaseApi {
     );
 
     @FormUrlEncoded
-    @POST("presensi/mahasiswa/detail/")
+    @POST("presensi/mahasiswa/detail")
     Call<DetailPresensiResponse> detailPresensiMahasiswa(
             @Field("mahasiswa") String username,
             @Field("presensi") int presensi
