@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "304766846249",
+    "project_id": "praktikumprogmob-presensiku",
+    "storage_bucket": "praktikumprogmob-presensiku.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304766846249:android:d5e1fe4e26882fd044a338",
+        "android_client_info": {
+          "package_name": "com.progmobklp12.aplikasipresensi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "304766846249-jj3gd9239qujamnl7u6l494l9ap4gted.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5_odYx7jLi4RXP9gqgIW0q_v8jNimdUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "304766846249-jj3gd9239qujamnl7u6l494l9ap4gted.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

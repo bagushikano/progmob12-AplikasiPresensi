@@ -15,6 +15,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:hint="@string/presensi_name_form_hint"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="text" />
+            android:inputType="textCapSentences" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -36,6 +37,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:hint="@string/presensi_desc_form_hint"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/presensi_name_form">
@@ -45,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +59,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-
+        app:errorEnabled="true"
         android:cursorVisible="false"
         android:focusableInTouchMode="false"
         android:focusable="false"
@@ -85,12 +87,11 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        app:errorEnabled="true"
         android:cursorVisible="false"
         android:focusableInTouchMode="false"
         android:focusable="false"
         android:longClickable="false"
-
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
@@ -118,12 +119,11 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        app:errorEnabled="true"
         android:cursorVisible="false"
         android:focusableInTouchMode="false"
         android:focusable="false"
         android:longClickable="false"
-
         android:layout_marginTop="16dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
@@ -136,11 +136,9 @@
             android:id="@+id/presensi_time_open_text_field"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:focusable="true"
             android:cursorVisible="false"
             android:focusableInTouchMode="true"
-
             android:ems="10"
             android:inputType="time" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -150,12 +148,11 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        app:errorEnabled="true"
         android:cursorVisible="false"
         android:focusableInTouchMode="false"
         android:focusable="false"
         android:longClickable="false"
-
         android:layout_marginTop="16dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"

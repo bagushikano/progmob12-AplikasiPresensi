@@ -91,7 +91,6 @@ public class HomeFragment extends Fragment {
                 if (response.body().getMessage().equals("Presensi berhasil di tampilkan")) {
                     presensiArrayList.addAll(response.body().getData());
                     presensiListAdapter.notifyDataSetChanged();
-                    Snackbar.make(v, "Data presensi terbuka berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {

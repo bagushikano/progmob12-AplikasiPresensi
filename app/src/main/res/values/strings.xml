@@ -12,4 +12,14 @@
     <string name="role_login_dropdown_mahasiswa">Mahasiswa</string>
     <string name="login_role_dropdown_dosen">Dosen</string>
     <string name="version_string">Versi %1$s</string>
+    <string name="register_name_error">Nama tidak boleh kosong</string>
+    <string name="register_name_error_length">Nama tidak boleh lebih dari 50 karakter</string>
+    <string name="register_noinduk_error">Nomor induk tidak boleh kosong</string>
+    <string name="register_noinduk_error_length">Nomor induk tidak boleh lebih dari 15 karakter</string>
+    <string name="register_username_error">Username tidak boleh kosong</string>
+    <string name="register_username_error_length">Username tidak boleh lebih dari 25 karakter</string>
+    <string name="register_password_error">Password tidak boleh kosong</string>
+    <string name="register_password_confirm_error">Silahkan konfirmasi password</string>
+    <string name="register_password_confirm_not_match">Password tidak cocok</string>
+    <string name="register_select_role_error">Silahkan pilih role</string>
 </resources>

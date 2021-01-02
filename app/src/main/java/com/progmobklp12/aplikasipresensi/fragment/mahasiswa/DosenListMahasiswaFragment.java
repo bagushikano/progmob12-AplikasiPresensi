@@ -94,7 +94,6 @@ public class DosenListMahasiswaFragment extends Fragment {
                 if (response.body().getMessage().equals("List dosen berhasil di tampilkan")) {
                     dosenArrayList.addAll(response.body().getData());
                     dosenListAdapter.notifyDataSetChanged();
-                    Snackbar.make(v, "List data dosen berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {

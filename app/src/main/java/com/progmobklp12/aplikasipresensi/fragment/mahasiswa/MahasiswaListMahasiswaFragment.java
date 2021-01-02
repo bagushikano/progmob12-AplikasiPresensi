@@ -136,7 +136,6 @@ public class MahasiswaListMahasiswaFragment extends Fragment {
                 if (response.body().getMessage().equals("List mahasiswa berhasil di tampilkan")) {
                     mahasiswaArrayList.addAll(response.body().getData());
                     mahasiswaListAdapter.notifyDataSetChanged();
-                    Snackbar.make(v, "List data mahasiswa berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {

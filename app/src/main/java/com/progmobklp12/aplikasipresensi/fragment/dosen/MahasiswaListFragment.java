@@ -51,11 +51,6 @@ public class MahasiswaListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mahasiswaArrayList = new ArrayList<>();
-        getAllMahasiswa();
-        if (flagData == 1) {
-            new insertDataMahasiswa().execute();
-        }
     }
 
     @Override
@@ -63,6 +58,7 @@ public class MahasiswaListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_mahasiswa_list, container, false);
+        mahasiswaArrayList = new ArrayList<>();
         recyclerView = v.findViewById(R.id.mahasiswa_list_recycler_view);
         mahasiswaListAdapter = new MahasiswaListAdapter(this.getActivity(), mahasiswaArrayList);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
@@ -71,6 +67,7 @@ public class MahasiswaListFragment extends Fragment {
 
         refreshData = v.findViewById(R.id.mahasiswa_list_refresh);
 
+        getAllMahasiswa();
 
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,20 +91,21 @@ public class MahasiswaListFragment extends Fragment {
                 if (response.body().getMessage().equals("List mahasiswa berhasil di tampilkan")) {
                     mahasiswaArrayList.addAll(response.body().getData());
                     mahasiswaListAdapter.notifyDataSetChanged();
-                    Snackbar.make(v, "List data mahasiswa berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
-                    flagData = 1;
+                    new insertDataMahasiswa().execute();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {
-                    Snackbar.make(v, "List mahasiswa gagal di tampilkan", Snackbar.LENGTH_SHORT).show();
-                    flagData = 0;
+                    Snackbar.make(v, "List mahasiswa gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                    new getMahasiswaData().execute();
+                    mahasiswaListAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call<ListMahasiswaResponse> call, Throwable t) {
-                Snackbar.make(v, "List mahasiswa gagal di tampilkan", Snackbar.LENGTH_SHORT).show();
-                flagData = 0;
+                Snackbar.make(v, "List mahasiswa gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                new getMahasiswaData().execute();
+                mahasiswaListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -117,6 +115,13 @@ public class MahasiswaListFragment extends Fragment {
         protected Mahasiswa doInBackground(Void... voids) {
             ((App) getActivity().getApplication()).appDatabase.mahasiswaDao().nukeTable();
             ((App) getActivity().getApplication()).appDatabase.mahasiswaDao().insertAll(mahasiswaArrayList);
+            return null;
+        }
+    }
+    public class getMahasiswaData extends AsyncTask<Void, Void, Mahasiswa> {
+        @Override
+        protected Mahasiswa doInBackground(Void... voids) {
+            mahasiswaArrayList.addAll(((App) getActivity().getApplication()).appDatabase.mahasiswaDao().getAll());
             return null;
         }
     }

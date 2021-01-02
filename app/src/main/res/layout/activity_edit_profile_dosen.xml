@@ -15,6 +15,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:hint="Nama"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="text" />
+            android:inputType="textCapSentences" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -36,6 +37,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:hint="No. Induk"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nama_form">
@@ -45,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,6 +60,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:hint="Username"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noinduk_form">
@@ -79,6 +82,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
+        app:errorEnabled="true"
         android:hint="Masukkan password untuk mengupdate profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

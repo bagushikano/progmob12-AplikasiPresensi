@@ -2,6 +2,7 @@ package com.progmobklp12.aplikasipresensi.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.activity.dosen.HomeActivity;
 import com.progmobklp12.aplikasipresensi.activity.mahasiswa.HomeMahasiswaActivity;
@@ -31,7 +33,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText username;
     private TextInputEditText password;
-    private TextView register;
+
+    private TextInputLayout usernameLayout;
+    private TextInputLayout passwordLayout;
+    private TextInputLayout roleLayout;
+
+    private ProgressDialog dialog;
+
+    private Button register;
     private String namaUser;
     private int loginStatus;
 
@@ -76,7 +85,13 @@ public class LoginActivity extends AppCompatActivity {
 
         username = findViewById(R.id.username_text_field);
         password = findViewById(R.id.password_text_field);
-        register = findViewById(R.id.reg_text);
+        register = findViewById(R.id.reg_button);
+
+        usernameLayout = findViewById(R.id.username_form);
+        passwordLayout = findViewById(R.id.password_form);
+        roleLayout = findViewById(R.id.login_role_form);
+
+        dialog = new ProgressDialog(this);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,26 +102,37 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("role", loginRoleDropdown.getText().toString());
-                if (loginRoleDropdown.getText().toString().equals("Dosen")) {
-                    loginDosen();
+                if(username.getText().toString().length() == 0){
+                    usernameLayout.setError("Username tidak boleh kosong");
                 }
-                else if (loginRoleDropdown.getText().toString().equals("Mahasiswa")) {
-                    loginMahasiswa();
-                }
-
-                else {
-                    Toast.makeText(getApplicationContext(), "Silahkan pilih role", Toast.LENGTH_SHORT).show();
+                else{
+                    usernameLayout.setError(null);
+                    if(password.getText().toString().length() == 0){
+                        passwordLayout.setError("Password tidak boleh kosong");
+                    }
+                    else{
+                        passwordLayout.setError(null);
+                        if (loginRoleDropdown.getText().toString().equals("Dosen")) {
+                            loginDosen();
+                        }
+                        else if (loginRoleDropdown.getText().toString().equals("Mahasiswa")) {
+                            loginMahasiswa();
+                        }
+                        else {
+                            roleLayout.setError("Silahkan pilih role");
+                        }
+                    }
                 }
             }
         });
     }
 
     public void loginMahasiswa() {
+        dialog.setMessage("Mohon tunggu...");
+        dialog.show();
         BaseApi loginApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Log.d("username", username.toString());
         Log.d("password", password.toString());
@@ -114,6 +140,9 @@ public class LoginActivity extends AppCompatActivity {
         loginMahasiswaResponseCall.enqueue(new Callback<LoginMahasiswaResponse>() {
             @Override
             public void onResponse(Call<LoginMahasiswaResponse> call, Response<LoginMahasiswaResponse> response) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (response.body().getMessage().equals("login sukses")) {
                     SharedPreferences.Editor editor = loginPreferences.edit();
                     String nama = response.body().getData().getNama();
@@ -124,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("username", username);
                     editor.putString("nim", nim);
                     editor.apply();
+
                     Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
                     Intent homeActivityMahasiswa = new Intent(getApplicationContext(), HomeMahasiswaActivity.class);
                     startActivity(homeActivityMahasiswa);
@@ -136,6 +166,9 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginMahasiswaResponse> call, Throwable t) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -143,6 +176,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void loginDosen() {
+        dialog.setMessage("Mohon tunggu...");
+        dialog.show();
         BaseApi loginApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Log.d("username", username.toString());
         Log.d("password", password.toString());
@@ -150,6 +185,9 @@ public class LoginActivity extends AppCompatActivity {
         loginDosenResponseCall.enqueue(new Callback<LoginDosenResponse>() {
             @Override
             public void onResponse(Call<LoginDosenResponse> call, Response<LoginDosenResponse> response) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (response.body().getMessage().equals("login sukses")) {
                     SharedPreferences.Editor editor = loginPreferences.edit();
                     String nama = response.body().getData().getNama();
@@ -160,6 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("username", username);
                     editor.putString("nip", nip);
                     editor.apply();
+
                     Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
                     Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
                     startActivity(homeActivity);
@@ -174,6 +213,9 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginDosenResponse> call, Throwable t) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
             }
         });

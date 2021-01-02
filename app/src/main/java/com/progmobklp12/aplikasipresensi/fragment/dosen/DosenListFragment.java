@@ -73,11 +73,6 @@ public class DosenListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dosenArrayList = new ArrayList<>();
-        getAllDosen();
-        if (flagData == 1) {
-            new insertDataDosen().execute();
-        }
     }
 
     @Override
@@ -91,6 +86,8 @@ public class DosenListFragment extends Fragment {
         nipUserView = v.findViewById(R.id.dosen_nip);
         usernameView = v.findViewById(R.id.dosen_username);
         refreshData = v.findViewById(R.id.dosen_list_refresh);
+
+        dosenArrayList = new ArrayList<>();
 
         recyclerView = v.findViewById(R.id.dosen_list_recycler_view);
         dosenListAdapter = new DosenListAdapter(this.getActivity(), dosenArrayList);
@@ -106,6 +103,8 @@ public class DosenListFragment extends Fragment {
         namaUserView.setText(String.format("Nama: %1$s", namaUser));
         nipUserView.setText(String.format("NIP: %1$s", nipUser));
         usernameView.setText(String.format("Username: %1$s", username));
+
+        getAllDosen();
 
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,20 +147,21 @@ public class DosenListFragment extends Fragment {
                 if (response.body().getMessage().equals("List dosen berhasil di tampilkan")) {
                     dosenArrayList.addAll(response.body().getData());
                     dosenListAdapter.notifyDataSetChanged();
-                    flagData = 1;
-                    Snackbar.make(v, "List data dosen berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
+                    new insertDataDosen().execute();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {
-                    Snackbar.make(v, "List data dosen gagal di refresh!", Snackbar.LENGTH_SHORT).show();
-                    flagData = 0;
+                    Snackbar.make(v, "List dosen gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                    new getDosenData().execute();
+                    dosenListAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call<ListDosenResponse> call, Throwable t) {
-                Snackbar.make(v, "List data dosen gagal di refresh!", Snackbar.LENGTH_SHORT).show();
-                flagData = 0;
+                Snackbar.make(v, "List dosen gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                new getDosenData().execute();
+                dosenListAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -171,6 +171,14 @@ public class DosenListFragment extends Fragment {
         protected Dosen doInBackground(Void... voids) {
             ((App) getActivity().getApplication()).appDatabase.dosenDao().nukeTable();
             ((App) getActivity().getApplication()).appDatabase.dosenDao().insertAll(dosenArrayList);
+            return null;
+        }
+    }
+
+    public class getDosenData extends AsyncTask<Void, Void, Dosen> {
+        @Override
+        protected Dosen doInBackground(Void... voids) {
+            dosenArrayList.addAll(((App) getActivity().getApplication()).appDatabase.dosenDao().getAll());
             return null;
         }
     }

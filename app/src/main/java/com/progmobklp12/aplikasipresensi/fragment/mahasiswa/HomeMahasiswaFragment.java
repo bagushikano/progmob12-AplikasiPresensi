@@ -97,7 +97,6 @@ public class HomeMahasiswaFragment extends Fragment {
                 if (response.body().getMessage().equals("List Absensi berhasil ditampilkan")) {
                     presensiArrayList.addAll(response.body().getData());
                     presensiListMahasiswaAdapter.notifyDataSetChanged();
-                    Snackbar.make(v, "Data presensi terbuka berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {

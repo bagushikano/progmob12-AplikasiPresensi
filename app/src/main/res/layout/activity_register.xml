@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/app_icon_about"
-        android:layout_width="189dp"
-        android:layout_height="195dp"
+        android:layout_width="156dp"
+        android:layout_height="154dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
@@ -30,6 +30,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:hint="Nama"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_icon_about">
@@ -39,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ems="10"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,9 +50,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:hint="No. Induk"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nama_form">
@@ -71,9 +72,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:hint="Username"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noinduk_form">
@@ -93,9 +94,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:hint="Password"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_form">
@@ -109,21 +110,43 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/password_confirm_form"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:hint="Konfirmasi password"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_form">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_confirm_text_field"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/role_select_form"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:hint="Register sebagai"
         android:focusable="false"
         android:longClickable="false"
         android:cursorVisible="false"
+        app:errorEnabled="true"
         android:focusableInTouchMode="false"
-        app:layout_constraintEnd_toEndOf="@+id/password_form"
-        app:layout_constraintStart_toStartOf="@+id/password_form"
-        app:layout_constraintTop_toBottomOf="@+id/password_form">
+        app:layout_constraintEnd_toEndOf="@+id/password_confirm_form"
+        app:layout_constraintStart_toStartOf="@+id/password_confirm_form"
+        app:layout_constraintTop_toBottomOf="@+id/password_confirm_form">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/login_role_dropdown"
@@ -139,11 +162,10 @@
         android:id="@+id/register_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Register"
         app:layout_constraintEnd_toEndOf="@+id/password_form"
         app:layout_constraintStart_toStartOf="@+id/password_form"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/role_select_form" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
