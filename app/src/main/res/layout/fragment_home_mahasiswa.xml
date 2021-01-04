@@ -44,17 +44,37 @@
             android:text="Daftar presensi yang sedang terbuka"
             android:textAppearance="?attr/textAppearanceHeadline6" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/presensi_open_list"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:id="@+id/muter_muter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:visibility="gone"
+                android:fontFamily="sans-serif-black"
+                android:text="Tidak ada presensi terbuka atau klik refresh untuk mengupdate data" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/presensi_open_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="8dp"
+                android:visibility="visible" />
+        </RelativeLayout>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

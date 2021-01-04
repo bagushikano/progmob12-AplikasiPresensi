@@ -47,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String[] loginRole = new String[] {getString(R.string.role_login_dropdown_mahasiswa), getString(R.string.login_role_dropdown_dosen)};
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.login_role_dropdown_menu_item, loginRole);
@@ -144,14 +145,19 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                if (response.body().getMessage().equals("Berhasil Register")) {
-                    Toast.makeText(getApplicationContext(), "Register berhasil", Toast.LENGTH_SHORT).show();
-                    Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(loginActivity);
-                    finish();
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Berhasil Register")) {
+                        Toast.makeText(getApplicationContext(), "Register berhasil", Toast.LENGTH_SHORT).show();
+                        Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginActivity);
+                        finish();
+                    }
+                    else if (response.body().getMessage().equals("username sama")) {
+                        Toast.makeText(getApplicationContext(), "Username tidak tersedia", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "register gagal", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Register gagal, silahkan coba lagi nanti", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -160,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "Register failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Server error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -177,14 +183,19 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                if (response.body().getMessage().equals("Berhasil Register")) {
-                    Toast.makeText(getApplicationContext(), "Register berhasil", Toast.LENGTH_SHORT).show();
-                    Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(loginActivity);
-                    finish();
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Berhasil Register")) {
+                        Toast.makeText(getApplicationContext(), "Register berhasil", Toast.LENGTH_SHORT).show();
+                        Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginActivity);
+                        finish();
+                    }
+                    else if (response.body().getMessage().equals("username sama")) {
+                        Toast.makeText(getApplicationContext(), "Username tidak tersedia", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Register gagal", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -193,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "Register failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             }
         });
     }

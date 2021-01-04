@@ -1,189 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.dosen.CreatePresensi">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/presensi_name_form"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:hint="@string/presensi_name_form_hint"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:context=".activity.dosen.CreatePresensi">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/presensi_name_text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:inputType="textCapSentences" />
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/presensi_name_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/presensi_name_form_hint"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/presensi_desc_form"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:hint="@string/presensi_desc_form_hint"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/presensi_name_form">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/presensi_name_text_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="textCapSentences" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/presensi_desc_text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:inputType="textCapSentences"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/presensi_desc_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/presensi_desc_form_hint"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/presensi_name_form">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/presensi_date_open_form"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        app:errorEnabled="true"
-        android:cursorVisible="false"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:longClickable="false"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/presensi_desc_text_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="textCapSentences"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        android:hint="@string/presensi_date_open_form_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/presensi_desc_form">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/presensi_date_open_text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/presensi_date_open_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            app:errorEnabled="true"
             android:cursorVisible="false"
-            android:focusableInTouchMode="true"
-            android:ems="10"
-            android:inputType="date"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:longClickable="false"
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/presensi_date_closed_form"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true"
-        android:cursorVisible="false"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:hint="@string/presensi_date_close_form_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/presensi_date_open_form">
+            android:hint="@string/presensi_date_open_form_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/presensi_desc_form">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/presensi_date_closed_text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/presensi_date_open_text_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="true"
+                android:ems="10"
+                android:inputType="date"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
-            android:focusable="true"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/presensi_date_closed_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
             android:cursorVisible="false"
-            android:focusableInTouchMode="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:longClickable="false"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/presensi_date_close_form_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/presensi_date_open_form">
 
-            android:ems="10"
-            android:inputType="date"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/presensi_date_closed_text_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/presensi_time_open_form"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true"
-        android:cursorVisible="false"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:hint="Waktu presensi di buka"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/presensi_date_closed_form">
+                android:focusable="true"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="true"
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/presensi_time_open_text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
+                android:ems="10"
+                android:inputType="date"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/presensi_time_open_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
             android:cursorVisible="false"
-            android:focusableInTouchMode="true"
-            android:ems="10"
-            android:inputType="time" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:longClickable="false"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:hint="Waktu presensi di buka"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/presensi_date_closed_form">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/presensi_time_close_form"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:errorEnabled="true"
-        android:cursorVisible="false"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:longClickable="false"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:hint="Waktu presensi di tutup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/presensi_time_open_form">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/presensi_time_open_text_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="true"
+                android:ems="10"
+                android:inputType="time" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/presensi_time_close_text_field"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:focusable="true"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/presensi_time_close_form"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
             android:cursorVisible="false"
-            android:focusableInTouchMode="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:longClickable="false"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:hint="Waktu presensi di tutup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/presensi_time_open_form">
 
-            android:ems="10"
-            android:inputType="time" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/presensi_time_close_text_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
+                android:focusable="true"
+                android:cursorVisible="false"
+                android:focusableInTouchMode="true"
 
-    <Button
-        android:id="@+id/create_presensi_button"
-        android:layout_width="0dp"
-        android:layout_marginTop="24dp"
-        android:layout_height="wrap_content"
-        android:text="@string/presensi_add_button_text"
-        app:layout_constraintEnd_toEndOf="@+id/presensi_time_close_form"
-        app:layout_constraintStart_toStartOf="@+id/presensi_time_close_form"
-        app:layout_constraintTop_toBottomOf="@+id/presensi_time_close_form" />
+                android:ems="10"
+                android:inputType="time" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/create_presensi_button"
+            android:layout_width="0dp"
+            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content"
+            android:text="@string/presensi_add_button_text"
+            app:layout_constraintEnd_toEndOf="@+id/presensi_time_close_form"
+            app:layout_constraintStart_toStartOf="@+id/presensi_time_close_form"
+            app:layout_constraintTop_toBottomOf="@+id/presensi_time_close_form" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

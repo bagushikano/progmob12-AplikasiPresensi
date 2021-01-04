@@ -1,5 +1,6 @@
 package com.progmobklp12.aplikasipresensi.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
     private Context mContext;
     private ArrayList<DetailPresensi> detailPresensiArrayList;
     private int position;
+    private ProgressDialog dialog;
 
     public DetailPresensiListAdapter(Context context, ArrayList<DetailPresensi> detailPresensiArrayList) {
         mContext = context;
@@ -48,9 +50,11 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
         holder.presensiDateMahasiswa.setText(String.format("Tanggal terabsen: %s", detailPresensiArrayList.get(position).getDateFilled()));
         if (detailPresensiArrayList.get(position).getIsApproved() == 1) {
             holder.presensiStatusMahasiswa.setText("Status: Approved");
+            holder.approveButton.setEnabled(false);
         }
         else {
             holder.presensiStatusMahasiswa.setText("Status: Not approved");
+            holder.declineButton.setEnabled(false);
         }
     }
 
@@ -74,9 +78,13 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
             approveButton = itemView.findViewById(R.id.approve_presensi_button);
             declineButton = itemView.findViewById(R.id.decline_presensi_button);
 
+
             approveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog = new ProgressDialog(mContext);
+                    dialog.setMessage("Mohon tunggu...");
+                    dialog.show();
                     int position = getAdapterPosition(); // untuk mendapatkan posisi di adapter
                     DetailPresensi detailPresensi = detailPresensiArrayList.get(position);
                     BaseApi approvePresensi = RetrofitClient.buildRetrofit().create(BaseApi.class);
@@ -84,17 +92,30 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
                     approvePresensiCall.enqueue(new Callback<MessageResponseModel>() {
                         @Override
                         public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
-                            if (response.body().getMessage().equals("Absensi approved")) {
-                                Toast.makeText(mContext, String.format("Presensi %s berhasil di approve!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
-                                presensiStatusMahasiswa.setText("Status: Approved");
-                                //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                            if (response.code() == 200) {
+                                if (response.body().getMessage().equals("Absensi approved")) {
+                                    Toast.makeText(mContext, String.format("Presensi %s berhasil di approve!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
+                                    presensiStatusMahasiswa.setText("Status: Approved");
+                                    approveButton.setEnabled(false);
+                                    declineButton.setEnabled(true);
+                                }
+                                else {
+                                    Toast.makeText(mContext, String.format("Presensi %s gagal di approve!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
+                                }
                             }
                             else {
                                 Toast.makeText(mContext, String.format("Presensi %s gagal di approve!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
                             }
+
                         }
                         @Override
                         public void onFailure(Call<MessageResponseModel> call, Throwable t) {
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
+                            }
                             Toast.makeText(mContext, String.format("Presensi %s gagal di approve!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -104,6 +125,9 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
             declineButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog = new ProgressDialog(mContext);
+                    dialog.setMessage("Mohon tunggu...");
+                    dialog.show();
                     int position = getAdapterPosition(); // untuk mendapatkan posisi di adapter
                     DetailPresensi detailPresensi = detailPresensiArrayList.get(position);
                     BaseApi declinePresensi = RetrofitClient.buildRetrofit().create(BaseApi.class);
@@ -111,10 +135,19 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
                     declinePresensiCall.enqueue(new Callback<MessageResponseModel>() {
                         @Override
                         public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
-                            if (response.body().getMessage().equals("Absensi decline")) {
-                                Toast.makeText(mContext, String.format("Presensi %s berhasil di decline!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
-                                presensiStatusMahasiswa.setText("Status: Not approved");
-                                //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                            if (response.code() == 200) {
+                                if (response.body().getMessage().equals("Absensi decline")) {
+                                    Toast.makeText(mContext, String.format("Presensi %s berhasil di decline!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
+                                    presensiStatusMahasiswa.setText("Status: Not approved");
+                                    declineButton.setEnabled(false);
+                                    approveButton.setEnabled(true);
+                                }
+                                else {
+                                    Toast.makeText(mContext, String.format("Presensi %s gagal di decline!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
+                                }
                             }
                             else {
                                 Toast.makeText(mContext, String.format("Presensi %s gagal di decline!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
@@ -122,12 +155,14 @@ public class DetailPresensiListAdapter extends RecyclerView.Adapter<DetailPresen
                         }
                         @Override
                         public void onFailure(Call<MessageResponseModel> call, Throwable t) {
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
+                            }
                             Toast.makeText(mContext, String.format("Presensi %s gagal di decline!", detailPresensi.getMahasiswa().getNama()), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             });
-
         }
     }
 }

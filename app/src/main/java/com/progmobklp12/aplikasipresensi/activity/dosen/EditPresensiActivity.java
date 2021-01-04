@@ -2,6 +2,7 @@ package com.progmobklp12.aplikasipresensi.activity.dosen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.progmobklp12.aplikasipresensi.R;
@@ -53,6 +55,13 @@ public class EditPresensiActivity extends AppCompatActivity {
     MaterialTimePicker materialTimePickerWaktuOpen;
     MaterialTimePicker materialTimePickerWaktuClose;
 
+    private TextInputLayout namaPresensiLayout;
+    private TextInputLayout keteranganPresensiLayout;
+    private TextInputLayout tanggalPresensiOpenLayout;
+    private TextInputLayout tanggalPresensiCloseLayout;
+    private TextInputLayout waktuPresensiOpenLayout;
+    private TextInputLayout waktuPresensiCloseLayout;
+
     private SimpleDateFormat timeFormatter;
     private SimpleDateFormat dateFormatter;
     private SimpleDateFormat editDateFormatter;
@@ -74,6 +83,11 @@ public class EditPresensiActivity extends AppCompatActivity {
 
     private int idPresensi;
 
+    private ProgressDialog dialog;
+
+    SimpleDateFormat dateDiffFormat;
+    Date dateOpen, dateClose;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +103,22 @@ public class EditPresensiActivity extends AppCompatActivity {
         waktuPresensiClose = findViewById(R.id.update_presensi_time_close_text_field);
         updatePresensiButton = findViewById(R.id.update_presensi_button);
 
+        namaPresensiLayout = findViewById(R.id.presensi_name_form);
+        keteranganPresensiLayout = findViewById(R.id.presensi_desc_form);
+        tanggalPresensiOpenLayout = findViewById(R.id.presensi_date_open_form);
+        tanggalPresensiCloseLayout = findViewById(R.id.presensi_date_closed_form);
+        waktuPresensiOpenLayout = findViewById(R.id.presensi_time_open_form);
+        waktuPresensiCloseLayout = findViewById(R.id.presensi_time_close_form);
+
+        dialog = new ProgressDialog(this);
+
         clockFormat = TimeFormat.CLOCK_24H;
         Calendar cal = Calendar.getInstance();
 
         timeFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         editDateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        dateDiffFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
         Bundle extras = getIntent().getExtras();
 
@@ -275,11 +299,61 @@ public class EditPresensiActivity extends AppCompatActivity {
         updatePresensiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updatePresensi();
+                if (namaPresensiField.getText().toString().length() == 0) {
+                    namaPresensiLayout.setError("Nama presensi tidak boleh kosong");
+                } else {
+                    if (namaPresensiField.getText().toString().length() > 255) {
+                        namaPresensiLayout.setError("Nama presensi tidak boleh lebih dari 255 karakter");
+                    } else {
+                        namaPresensiLayout.setError(null);
+                        if (keteranganPresensiField.getText().toString().length() == 0) {
+                            keteranganPresensiLayout.setError("Keterangan presensi tidak boleh kosong");
+                        } else {
+                            keteranganPresensiLayout.setError(null);
+                            if (tanggalPresensiOpen.getText().toString().length() == 0) {
+                                tanggalPresensiOpenLayout.setError("Tanggal presensi di buka tidak boleh kosong");
+                            } else {
+                                tanggalPresensiOpenLayout.setError(null);
+                                if (tanggalPresensiClose.getText().toString().length() == 0) {
+                                    tanggalPresensiCloseLayout.setError("Tanggal presensi di tutup tidak boleh kosong");
+                                } else {
+                                    tanggalPresensiCloseLayout.setError(null);
+                                    if (waktuPresensiOpen.getText().toString().length() == 0) {
+                                        waktuPresensiOpenLayout.setError("Waktu presensi di buka tidak boleh kosong");
+                                    } else {
+                                        waktuPresensiOpenLayout.setError(null);
+                                        if (waktuPresensiClose.getText().toString().length() == 0) {
+                                            waktuPresensiCloseLayout.setError("Waktu presensi di tutup tidak boleh kosong");
+                                        } else {
+                                            waktuPresensiCloseLayout.setError(null);
+                                            try {
+                                                dateOpen = dateDiffFormat.parse(tanggalPresensiOpen.getText().toString() + " " + waktuPresensiOpen.getText().toString());
+                                                dateClose = dateDiffFormat.parse(tanggalPresensiClose.getText().toString() + " " + waktuPresensiClose.getText().toString());
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            long dateDifferent = dateClose.getTime() - dateOpen.getTime();
+                                            if (dateDifferent < 0) {
+                                                tanggalPresensiOpenLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                                tanggalPresensiCloseLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                                waktuPresensiOpenLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                                waktuPresensiCloseLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                            } else {
+                                                updatePresensi();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
     public void updatePresensi() {
+        dialog.setMessage("Mohon tunggu...");
+        dialog.show();
         BaseApi editPresensiApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<PresensiEditResponse> presensiEditResponseCall = editPresensiApi.editPresensi(idPresensi, namaPresensiField.getText().toString(),
                 keteranganPresensiField.getText().toString(), (tanggalPresensiOpen.getText().toString() + " " + waktuPresensiOpen.getText().toString()),
@@ -287,18 +361,26 @@ public class EditPresensiActivity extends AppCompatActivity {
         presensiEditResponseCall.enqueue(new Callback<PresensiEditResponse>() {
             @Override
             public void onResponse(Call<PresensiEditResponse> call, Response<PresensiEditResponse> response) {
-                if (response.body().getMessage().equals("Data berhasil di Update")) {
-                    Toast.makeText(getApplicationContext(), "Presensi berhasil di update!", Toast.LENGTH_SHORT).show();
-                    finish();
+                if (dialog.isShowing()){
+                    dialog.dismiss();
                 }
-                else {
-                    Toast.makeText(getApplicationContext(), "Presensi gagal di update", Toast.LENGTH_SHORT).show();
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Data berhasil di Update")) {
+                        Toast.makeText(getApplicationContext(), "Presensi berhasil di update!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Presensi gagal di update", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<PresensiEditResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Presensi gagal di update", Toast.LENGTH_SHORT).show();
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
+                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -22,4 +22,5 @@
     <string name="register_password_confirm_error">Silahkan konfirmasi password</string>
     <string name="register_password_confirm_not_match">Password tidak cocok</string>
     <string name="register_select_role_error">Silahkan pilih role</string>
+    <string name="server_error">Server error atau cek kondisi internet anda</string>
 </resources>

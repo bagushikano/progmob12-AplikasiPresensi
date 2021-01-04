@@ -1,8 +1,10 @@
 package com.progmobklp12.aplikasipresensi.fragment.mahasiswa;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,12 +20,14 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.progmobklp12.aplikasipresensi.App;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.activity.dosen.EditProfileDosenActivity;
 import com.progmobklp12.aplikasipresensi.activity.mahasiswa.EditProfileMahasiswaActivity;
 import com.progmobklp12.aplikasipresensi.adapter.MahasiswaListAdapter;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
+import com.progmobklp12.aplikasipresensi.fragment.dosen.MahasiswaListFragment;
 import com.progmobklp12.aplikasipresensi.model.mahasiswa.ListMahasiswaResponse;
 import com.progmobklp12.aplikasipresensi.model.mahasiswa.Mahasiswa;
 
@@ -53,26 +57,30 @@ public class MahasiswaListMahasiswaFragment extends Fragment {
     private FloatingActionButton refreshData;
 
     private TextView listKosong;
-
     View v;
+    private Activity activity;
 
     public MahasiswaListMahasiswaFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        activity = getActivity();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mahasiswaArrayList = new ArrayList<>();
-        getAllMahasiswa();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_mahasiswa_list_mahasiswa, container, false);
-
+        mahasiswaArrayList = new ArrayList<>();
+        listKosong = v.findViewById(R.id.empty_view);
         editProfile = v.findViewById(R.id.mahasiswa_edit_profile);
         namaUserView = v.findViewById(R.id.mahasiswa_name_text);
         nimUserView = v.findViewById(R.id.mahasiswa_nim_text);
@@ -94,6 +102,24 @@ public class MahasiswaListMahasiswaFragment extends Fragment {
         nimUserView.setText(String.format("NIM: %1$s", nimUser));
         usernameView.setText(String.format("Username: %1$s", username));
 
+        mahasiswaListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (mahasiswaListAdapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    listKosong.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    listKosong.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+        getAllMahasiswa();
+
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +132,7 @@ public class MahasiswaListMahasiswaFragment extends Fragment {
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(v, "List mahasiswa sedang di refresh, harap tunggu", Snackbar.LENGTH_SHORT).show();
                 mahasiswaArrayList.clear();
                 getAllMahasiswa();
             }
@@ -128,24 +155,66 @@ public class MahasiswaListMahasiswaFragment extends Fragment {
 
 
     public void getAllMahasiswa() {
+        v.findViewById(R.id.muter_muter).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.mahasiswa_list_recycler_mahasiswa_view).setVisibility(View.GONE);
+        v.findViewById(R.id.empty_view).setVisibility(View.GONE);
         BaseApi getMahasiswa = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<ListMahasiswaResponse> listMahasiswaResponseCall = getMahasiswa.listMahasiswaAll();
         listMahasiswaResponseCall.enqueue(new Callback<ListMahasiswaResponse>() {
             @Override
             public void onResponse(Call<ListMahasiswaResponse> call, Response<ListMahasiswaResponse> response) {
-                if (response.body().getMessage().equals("List mahasiswa berhasil di tampilkan")) {
-                    mahasiswaArrayList.addAll(response.body().getData());
-                    mahasiswaListAdapter.notifyDataSetChanged();
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("List mahasiswa berhasil di tampilkan")) {
+                        mahasiswaArrayList.addAll(response.body().getData());
+                        mahasiswaListAdapter.notifyDataSetChanged();
+                        new insertDataMahasiswa().execute();
+                    }
+                    else {
+                        Snackbar.make(v, "List mahasiswa gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                        new getMahasiswaData().execute();
+                        mahasiswaListAdapter.notifyDataSetChanged();
+                    }
                 }
                 else {
-                    Snackbar.make(v, "List mahasiswa gagal di tampilkan", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, "List mahasiswa gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                    new getMahasiswaData().execute();
+                    mahasiswaListAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call<ListMahasiswaResponse> call, Throwable t) {
-                Snackbar.make(v, "List mahasiswa gagal di tampilkan", Snackbar.LENGTH_SHORT).show();
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                Snackbar.make(v, "List mahasiswa gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                new getMahasiswaData().execute();
+                mahasiswaListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    public class insertDataMahasiswa extends AsyncTask<Void, Void, Mahasiswa> {
+        @Override
+        protected Mahasiswa doInBackground(Void... voids) {
+            ((App) getActivity().getApplication()).appDatabase.mahasiswaDao().nukeTable();
+            ((App) getActivity().getApplication()).appDatabase.mahasiswaDao().insertAll(mahasiswaArrayList);
+            return null;
+        }
+    }
+    public class getMahasiswaData extends AsyncTask<Void, Void, Mahasiswa> {
+        @Override
+        protected Mahasiswa doInBackground(Void... voids) {
+            mahasiswaArrayList.addAll(((App) getActivity().getApplication()).appDatabase.mahasiswaDao().getAll());
+            updateDataView();
+            return null;
+        }
+    }
+
+    public void updateDataView() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mahasiswaListAdapter.notifyDataSetChanged();
             }
         });
     }

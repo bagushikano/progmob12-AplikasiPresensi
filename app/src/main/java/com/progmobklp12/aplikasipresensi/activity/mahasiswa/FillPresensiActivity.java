@@ -2,6 +2,7 @@ package com.progmobklp12.aplikasipresensi.activity.mahasiswa;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class FillPresensiActivity extends AppCompatActivity {
     private String username;
     SharedPreferences loginPreferences;
 
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,7 @@ public class FillPresensiActivity extends AppCompatActivity {
         presensiOwner = findViewById(R.id.presensi_owner_view);
         fillPresensi = findViewById(R.id.fill_presensi);
 
+        dialog = new ProgressDialog(this);
 
         id = extras.getInt(presensiIdKey);
         presensiNameView.setText(extras.getString(presensiNameKey));
@@ -68,24 +72,37 @@ public class FillPresensiActivity extends AppCompatActivity {
         fillPresensi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.setMessage("Mohon tunggu...");
+                dialog.show();
                 BaseApi fillPresensiApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
                 Call<MessageResponseModel> fillPresensiCall = fillPresensiApi.signPresensiMahasiswa(username, id);
                 fillPresensiCall.enqueue(new Callback<MessageResponseModel>() {
                     @Override
                     public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
-                        if (response.body().getMessage().equals("Presensi Berhasil di Buat")) {
-                            Toast.makeText(getApplicationContext(), "Presensi berhasil di isi!", Toast.LENGTH_SHORT).show();
-                            finish();
-                            //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                        if (dialog.isShowing()){
+                            dialog.dismiss();
+                        }
+                        if (response.code() == 200) {
+                            if (response.body().getMessage().equals("Presensi Berhasil di Buat")) {
+                                Toast.makeText(getApplicationContext(), "Presensi berhasil di isi!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Presensi gagal di isi!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
                         else {
-                            Toast.makeText(getApplicationContext(), "Presensi gagal di isi!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
                     @Override
                     public void onFailure(Call<MessageResponseModel> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "Presensi gagal di isi!", Toast.LENGTH_SHORT).show();
+                        if (dialog.isShowing()){
+                            dialog.dismiss();
+                        }
+                        Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });

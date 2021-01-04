@@ -67,6 +67,8 @@ public class DetailFilledPresensiActivity extends AppCompatActivity {
         presensiDateOpenView.setText(String.format("Tanggal buka: %s", extras.getString(presensiDateOpenKey)));
         presensiDateCloseView.setText(String.format("Tanggal tutup: %s",extras.getString(presensiDateCloseKey)));
         presensiOwner.setText(String.format("Pemilik presensi: %s", extras.getString(presensiOwnerKey)));
+        presensiDateFilled.setText("Tanggal di isi: mohon tunggu...");
+        isApproved.setText("Status presensi: mohon tunggu...");
         if (extras.getInt(presensiStatusKey) == 1) {
             presensiStatusView.setText("Status presensi: terbuka");
         }
@@ -79,20 +81,26 @@ public class DetailFilledPresensiActivity extends AppCompatActivity {
         detailPresensiResponseCall.enqueue(new Callback<DetailPresensiResponse>() {
             @Override
             public void onResponse(Call<DetailPresensiResponse> call, Response<DetailPresensiResponse> response) {
-                if (response.body().getMessage().equals("Presensi telah di isi")) {
-                    presensiDateFilled.setText(String.format("Tanggal di isi: %s", response.body().getData().get(0).getDateFilled()));
-                    if (response.body().getData().get(0).getIsApproved() == 1) {
-                        isApproved.setText("Status presensi: Approved");
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Presensi telah di isi")) {
+                        presensiDateFilled.setText(String.format("Tanggal di isi: %s", response.body().getData().get(0).getDateFilled()));
+                        if (response.body().getData().get(0).getIsApproved() == 1) {
+                            isApproved.setText("Status presensi: Approved");
+                        }
+                        else {
+                            isApproved.setText("Status presensi: Declined");
+                        }
                     }
-                    else {
-                        isApproved.setText("Status presensi: Declined");
-                    }
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                }
+                else {
+                    presensiDateFilled.setText("Tanggal di isi: koneksi ke server gagal");
+                    isApproved.setText("Status presensi: koneksi ke server gagal");
                 }
             }
             @Override
             public void onFailure(Call<DetailPresensiResponse> call, Throwable t) {
-
+                presensiDateFilled.setText("Tanggal di isi: koneksi ke server gagal");
+                isApproved.setText("Status presensi: koneksi ke server gagal");
             }
         });
 

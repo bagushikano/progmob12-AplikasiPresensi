@@ -1,5 +1,6 @@
 package com.progmobklp12.aplikasipresensi.fragment.dosen;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -63,11 +64,17 @@ public class DosenListFragment extends Fragment {
     private TextView listKosong;
     View v;
 
-    int flagData = 0;
+    private Activity activity;
 
 
     public DosenListFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        activity = getActivity();
     }
 
     @Override
@@ -80,7 +87,7 @@ public class DosenListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_dosen_list, container, false);
-
+        listKosong = v.findViewById(R.id.empty_view);
         editProfile = v.findViewById(R.id.dosen_edit_profile);
         namaUserView = v.findViewById(R.id.dosen_name_text);
         nipUserView = v.findViewById(R.id.dosen_nip);
@@ -109,12 +116,12 @@ public class DosenListFragment extends Fragment {
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(v, "List dosen sedang di refresh, harap tunggu", Snackbar.LENGTH_SHORT).show();
                 dosenArrayList.clear();
                 getAllDosen();
-                // TODO handle refresh data semisal koneksi rusak
             }
         });
-
+        
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +129,23 @@ public class DosenListFragment extends Fragment {
                 startActivityForResult(editProfile, 1);
             }
         });
+
+        dosenListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (dosenListAdapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    listKosong.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    listKosong.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
         return v;
     }
 
@@ -139,16 +163,26 @@ public class DosenListFragment extends Fragment {
     }
 
     public void getAllDosen() {
+        v.findViewById(R.id.muter_muter).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.dosen_list_recycler_view).setVisibility(View.GONE);
+        v.findViewById(R.id.empty_view).setVisibility(View.GONE);
         BaseApi getDosen = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<ListDosenResponse> listDosenResponseCall = getDosen.listDosenAll();
         listDosenResponseCall.enqueue(new Callback<ListDosenResponse>() {
             @Override
             public void onResponse(Call<ListDosenResponse> call, Response<ListDosenResponse> response) {
-                if (response.body().getMessage().equals("List dosen berhasil di tampilkan")) {
-                    dosenArrayList.addAll(response.body().getData());
-                    dosenListAdapter.notifyDataSetChanged();
-                    new insertDataDosen().execute();
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("List dosen berhasil di tampilkan")) {
+                        dosenArrayList.addAll(response.body().getData());
+                        dosenListAdapter.notifyDataSetChanged();
+                        new insertDataDosen().execute();
+                    }
+                    else {
+                        Snackbar.make(v, "List dosen gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
+                        new getDosenData().execute();
+                        dosenListAdapter.notifyDataSetChanged();
+                    }
                 }
                 else {
                     Snackbar.make(v, "List dosen gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
@@ -159,6 +193,7 @@ public class DosenListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListDosenResponse> call, Throwable t) {
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
                 Snackbar.make(v, "List dosen gagal di refresh, menggunakan data dari database", Snackbar.LENGTH_SHORT).show();
                 new getDosenData().execute();
                 dosenListAdapter.notifyDataSetChanged();
@@ -179,8 +214,17 @@ public class DosenListFragment extends Fragment {
         @Override
         protected Dosen doInBackground(Void... voids) {
             dosenArrayList.addAll(((App) getActivity().getApplication()).appDatabase.dosenDao().getAll());
+            updateDataView();
             return null;
         }
     }
 
+    public void updateDataView() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dosenListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 }

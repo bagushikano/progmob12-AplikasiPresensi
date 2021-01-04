@@ -2,6 +2,7 @@ package com.progmobklp12.aplikasipresensi.activity.dosen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.TimeFormat;
 import com.progmobklp12.aplikasipresensi.R;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -23,6 +25,7 @@ import com.progmobklp12.aplikasipresensi.model.mahasiswa.RegisterMahasiswaRespon
 import com.progmobklp12.aplikasipresensi.model.presensi.PresensiCreateResponse;
 
 import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +45,13 @@ public class CreatePresensi extends AppCompatActivity {
     private TextInputEditText waktuPresensiOpen;
     private TextInputEditText waktuPresensiClose;
 
+    private TextInputLayout namaPresensiLayout;
+    private TextInputLayout keteranganPresensiLayout;
+    private TextInputLayout tanggalPresensiOpenLayout;
+    private TextInputLayout tanggalPresensiCloseLayout;
+    private TextInputLayout waktuPresensiOpenLayout;
+    private TextInputLayout waktuPresensiCloseLayout;
+
     private Button createPresensiButton;
 
     MaterialDatePicker.Builder materialDateBuilderTanggalOpen;
@@ -59,8 +69,13 @@ public class CreatePresensi extends AppCompatActivity {
     private Date waktuOpen;
     private Date waktuClose;
 
+    SimpleDateFormat dateDiffFormat;
+    Date dateOpen, dateClose;
+
     @TimeFormat
     private int clockFormat;
+
+    private ProgressDialog dialog;
 
     private String username;
     SharedPreferences loginPreferences;
@@ -71,6 +86,8 @@ public class CreatePresensi extends AppCompatActivity {
         setContentView(R.layout.activity_create_presensi);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        dialog = new ProgressDialog(this);
+
         namaPresensiField = findViewById(R.id.presensi_name_text_field);
         keteranganPresensiField = findViewById(R.id.presensi_desc_text_field);
         tanggalPresensiOpen = findViewById(R.id.presensi_date_open_text_field);
@@ -79,6 +96,13 @@ public class CreatePresensi extends AppCompatActivity {
         waktuPresensiClose = findViewById(R.id.presensi_time_close_text_field);
         createPresensiButton = findViewById(R.id.create_presensi_button);
 
+        namaPresensiLayout = findViewById(R.id.presensi_name_form);
+        keteranganPresensiLayout = findViewById(R.id.presensi_desc_form);
+        tanggalPresensiOpenLayout = findViewById(R.id.presensi_date_open_form);
+        tanggalPresensiCloseLayout = findViewById(R.id.presensi_date_closed_form);
+        waktuPresensiOpenLayout = findViewById(R.id.presensi_time_open_form);
+        waktuPresensiCloseLayout = findViewById(R.id.presensi_time_close_form);
+
         loginPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
         username = loginPreferences.getString("username", "kosong");
 
@@ -86,7 +110,8 @@ public class CreatePresensi extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
 
         timeFormatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        dateDiffFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
         materialTimePickerBuliderWaktuOpen = new MaterialTimePicker.Builder();
         materialTimePickerBuliderWaktuOpen.setTimeFormat(clockFormat);
@@ -244,12 +269,63 @@ public class CreatePresensi extends AppCompatActivity {
         createPresensiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createPresensi();
+                if (namaPresensiField.getText().toString().length() == 0) {
+                    namaPresensiLayout.setError("Nama presensi tidak boleh kosong");
+                } else {
+                    if (namaPresensiField.getText().toString().length() > 255) {
+                        namaPresensiLayout.setError("Nama presensi tidak boleh lebih dari 255 karakter");
+                    } else {
+                        namaPresensiLayout.setError(null);
+                        if (keteranganPresensiField.getText().toString().length() == 0) {
+                            keteranganPresensiLayout.setError("Keterangan presensi tidak boleh kosong");
+                        } else {
+                            keteranganPresensiLayout.setError(null);
+                            if (tanggalPresensiOpen.getText().toString().length() == 0) {
+                                tanggalPresensiOpenLayout.setError("Tanggal presensi di buka tidak boleh kosong");
+                            } else {
+                                tanggalPresensiOpenLayout.setError(null);
+                                if (tanggalPresensiClose.getText().toString().length() == 0) {
+                                    tanggalPresensiCloseLayout.setError("Tanggal presensi di tutup tidak boleh kosong");
+                                } else {
+                                    tanggalPresensiCloseLayout.setError(null);
+                                    if (waktuPresensiOpen.getText().toString().length() == 0) {
+                                        waktuPresensiOpenLayout.setError("Waktu presensi di buka tidak boleh kosong");
+                                    } else {
+                                        waktuPresensiOpenLayout.setError(null);
+                                        if (waktuPresensiClose.getText().toString().length() == 0) {
+                                            waktuPresensiCloseLayout.setError("Waktu presensi di tutup tidak boleh kosong");
+                                        } else {
+                                            waktuPresensiCloseLayout.setError(null);
+                                            try {
+                                                dateOpen = dateDiffFormat.parse(tanggalPresensiOpen.getText().toString() + " " + waktuPresensiOpen.getText().toString());
+                                                dateClose = dateDiffFormat.parse(tanggalPresensiClose.getText().toString() + " " + waktuPresensiClose.getText().toString());
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            long dateDifferent = dateClose.getTime() - dateOpen.getTime();
+                                            if (dateDifferent < 0) {
+                                                tanggalPresensiOpenLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                                tanggalPresensiCloseLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                                waktuPresensiOpenLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                                waktuPresensiCloseLayout.setError("Tanggal dan waktu presensi tidak valid");
+                                            }
+                                            else {
+                                                createPresensi();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
 
     public void createPresensi() {
+        dialog.setMessage("Mohon tunggu...");
+        dialog.show();
         BaseApi createPresensiApi = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<PresensiCreateResponse> presensiCreateResponseCall = createPresensiApi.createPresensi(username,namaPresensiField.getText().toString(),
                 keteranganPresensiField.getText().toString(), (tanggalPresensiOpen.getText().toString() + " " + waktuPresensiOpen.getText().toString()),
@@ -257,17 +333,24 @@ public class CreatePresensi extends AppCompatActivity {
         presensiCreateResponseCall.enqueue(new Callback<PresensiCreateResponse>() {
             @Override
             public void onResponse(Call<PresensiCreateResponse> call, Response<PresensiCreateResponse> response) {
-                if (response.body().getMessage().equals("Presensi Berhasil di Buat")) {
-                    Toast.makeText(getApplicationContext(), "Presensi berhasil di buat!", Toast.LENGTH_SHORT).show();
-                    finish();
+                if (dialog.isShowing()){
+                    dialog.dismiss();
                 }
-                else {
-                    Toast.makeText(getApplicationContext(), "Presensi gagal di Buat", Toast.LENGTH_SHORT).show();
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Presensi Berhasil di Buat")) {
+                        Toast.makeText(getApplicationContext(), "Presensi berhasil di buat!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Presensi gagal di Buat", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-
             @Override
             public void onFailure(Call<PresensiCreateResponse> call, Throwable t) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 Toast.makeText(getApplicationContext(), "Presensi gagal di Buat", Toast.LENGTH_SHORT).show();
             }
         });

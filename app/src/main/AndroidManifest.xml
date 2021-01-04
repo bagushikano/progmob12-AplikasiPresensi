@@ -34,7 +34,9 @@
         <activity
             android:name=".activity.dosen.EditProfileDosenActivity"
             android:label="Update profile" />
-        <activity android:name=".activity.RegisterActivity" />
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:label="Register"/>
         <activity
             android:name=".activity.mahasiswa.FillPresensiActivity"
             android:label="Isi presensi" />
@@ -60,11 +62,15 @@
             </intent-filter>
         </activity>
         <service
+            android:enabled="true"
+            android:exported="false"
             android:name=".service.FirebaseMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_baseline_content_paste_24" />
     </application>
 </manifest>

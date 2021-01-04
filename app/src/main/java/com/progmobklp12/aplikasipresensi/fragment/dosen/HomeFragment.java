@@ -44,6 +44,9 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
 
+    private TextView listKosong;
+
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -55,6 +58,7 @@ public class HomeFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_home, container, false);
 
         refreshData = v.findViewById(R.id.presensi_open_refresh);
+        listKosong = v.findViewById(R.id.empty_view);
 
         loginPreferences = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
         namaUser = loginPreferences.getString("nama", "kosong");
@@ -70,9 +74,25 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(presensiListAdapter);
 
+        presensiListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (presensiListAdapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    listKosong.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    listKosong.setVisibility(View.GONE);
+                }
+            }
+        });
+
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(v, "List presensi terbuka sedang di refresh, harap tunggu", Snackbar.LENGTH_SHORT).show();
                 presensiArrayList.clear();
                 getDosenPresensiOpen();
             }
@@ -83,23 +103,29 @@ public class HomeFragment extends Fragment {
 
 
     public void getDosenPresensiOpen() {
+        v.findViewById(R.id.muter_muter).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.presensi_open_list).setVisibility(View.GONE);
+        v.findViewById(R.id.empty_view).setVisibility(View.GONE);
         BaseApi getPresensiOpen = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<PresensiDosenResponse> presensiDosenOpenResponseCall = getPresensiOpen.listPresensiOpenDosen(username);
         presensiDosenOpenResponseCall.enqueue(new Callback<PresensiDosenResponse>() {
             @Override
             public void onResponse(Call<PresensiDosenResponse> call, Response<PresensiDosenResponse> response) {
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
                 if (response.body().getMessage().equals("Presensi berhasil di tampilkan")) {
                     presensiArrayList.addAll(response.body().getData());
                     presensiListAdapter.notifyDataSetChanged();
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
                 }
                 else {
+                    presensiListAdapter.notifyDataSetChanged();
                     Snackbar.make(v, "Data presensi terbuka gagal di refresh!", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<PresensiDosenResponse> call, Throwable t) {
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                presensiListAdapter.notifyDataSetChanged();
                 Snackbar.make(v, "Data presensi terbuka gagal di refresh!", Snackbar.LENGTH_SHORT).show();
             }
         });

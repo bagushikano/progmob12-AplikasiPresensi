@@ -45,8 +45,6 @@ public class PresensiFragment extends Fragment {
     FloatingActionButton fab;
     FloatingActionButton fabRefresh;
 
-
-
     private TextView listKosong;
     View v;
 
@@ -60,16 +58,15 @@ public class PresensiFragment extends Fragment {
 
 
         fabRefresh = v.findViewById(R.id.presensi_refresh_fab);
-
+        listKosong = v.findViewById(R.id.empty_view);
         presensiArrayList = new ArrayList<>();
-
         recyclerView = v.findViewById(R.id.presensi_recycler_view);
         presensiListAdapter = new PresensiListAdapter(this.getActivity(), presensiArrayList);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(presensiListAdapter);
 
-        FloatingActionButton fab = v.findViewById(R.id.presensi_detail_fab);
+        fab = v.findViewById(R.id.presensi_detail_fab);
 
         loginPreferences = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
         username = loginPreferences.getString("username", "kosong");
@@ -79,6 +76,7 @@ public class PresensiFragment extends Fragment {
         fabRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(v, "List presensi sedang di refresh, harap tunggu", Snackbar.LENGTH_SHORT).show();
                 presensiArrayList.clear();
                 getDosenPresensi();
             }
@@ -91,6 +89,22 @@ public class PresensiFragment extends Fragment {
                 startActivity(createPresensi);
             }
         });
+
+        presensiListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (presensiListAdapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    listKosong.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    listKosong.setVisibility(View.GONE);
+                }
+            }
+        });
+
         return v;
     }
 
@@ -100,23 +114,35 @@ public class PresensiFragment extends Fragment {
     }
 
     public void getDosenPresensi() {
+        v.findViewById(R.id.muter_muter).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.presensi_recycler_view).setVisibility(View.GONE);
+        v.findViewById(R.id.empty_view).setVisibility(View.GONE);
         BaseApi getPresensiDosen = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<PresensiDosenResponse> presensiDosenResponseCall = getPresensiDosen.listPresensiDosen(username);
         presensiDosenResponseCall.enqueue(new Callback<PresensiDosenResponse>() {
             @Override
             public void onResponse(Call<PresensiDosenResponse> call, Response<PresensiDosenResponse> response) {
-                if (response.body().getMessage().equals("Presensi berhasil di tampilkan")) {
-                    presensiArrayList.addAll(response.body().getData());
-                    presensiListAdapter.notifyDataSetChanged();
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Presensi berhasil di tampilkan")) {
+                        presensiArrayList.addAll(response.body().getData());
+                        presensiListAdapter.notifyDataSetChanged();
+                    }
+                    else {
+                        presensiListAdapter.notifyDataSetChanged();
+                        Snackbar.make(v, "Data presensi gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
                 else {
+                    presensiListAdapter.notifyDataSetChanged();
                     Snackbar.make(v, "Data presensi gagal di refresh!", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<PresensiDosenResponse> call, Throwable t) {
+                presensiListAdapter.notifyDataSetChanged();
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
                 Snackbar.make(v, "Data presensi gagal di refresh!", Snackbar.LENGTH_SHORT).show();
             }
         });

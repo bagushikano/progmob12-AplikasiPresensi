@@ -1,7 +1,10 @@
 package com.progmobklp12.aplikasipresensi.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.activity.dosen.DetailPresensiActivity;
 import com.progmobklp12.aplikasipresensi.activity.dosen.EditPresensiActivity;
@@ -38,6 +42,8 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
     private String presensiIdKey = "PRESENSIID";
     private String presensiStatusKey = "PRESENSISTATUS";
 
+    private ProgressDialog dialog;
+
 
     public PresensiListAdapter(Context context, ArrayList<Presensi> presensiArrayList) {
         mContext = context;
@@ -59,12 +65,11 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
         holder.presensiOpenDate.setText(String.format("Tanggal di buka: %s", presensiArrayList.get(position).getTanggalOpen()));
         holder.presensiCloseDate.setText(String.format("Tanggal di tutup: %s", presensiArrayList.get(position).getTanggalClose()));
         if (presensiArrayList.get(position).getIsOpen() == 1) {
-            holder.openCloseButton.setText("Tutup");
+            holder.openCloseButton.setText("Tutup presensi");
         }
         else {
-            holder.openCloseButton.setText("Buka");
+            holder.openCloseButton.setText("Buka presensi");
         }
-        //TODO di backendnya update juga tanggal buka sama tutup nya sesuai kapan buka/tutupnya
     }
 
     @Override
@@ -97,30 +102,63 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
                 public void onClick(View v) {
                     int position = getAdapterPosition(); // untuk mendapatkan posisi di adapter
                     Presensi presensi = presensiArrayList.get(position); //untuk dapetin posisi item dari arraylist yang di klik di cardnya
-                    BaseApi deletePresensi = RetrofitClient.buildRetrofit().create(BaseApi.class);
-                    Call<MessageResponseModel> deletePresensiData = deletePresensi.deletePresensi(presensi.getIdPresensi());
-                    deletePresensiData.enqueue(new Callback<MessageResponseModel>() {
-                        @Override
-                        public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
-                            if (response.body().getMessage().equals("Data berhasil di delete")) {
-                                Toast.makeText(mContext, "Presensi berhasil di hapus!", Toast.LENGTH_SHORT).show();
-                                //TODO ada bug disini klo semisal koneksi ke server putus dia crash
-                            }
-                            else {
-                                Toast.makeText(mContext, "Presensi gagal di hapus", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<MessageResponseModel> call, Throwable t) {
-                            Toast.makeText(mContext, "Presensi gagal di hapus", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    new MaterialAlertDialogBuilder(mContext)
+                            .setTitle("Hapus presensi")
+                            .setMessage(String.format("Yakin ingin menghapus presensi %s ?", presensi.getNamaPresensi()))
+                            .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    dialog = new ProgressDialog(mContext);
+                                    dialog.setMessage("Mohon tunggu...");
+                                    dialog.show();
+                                    BaseApi deletePresensi = RetrofitClient.buildRetrofit().create(BaseApi.class);
+                                    Call<MessageResponseModel> deletePresensiData = deletePresensi.deletePresensi(presensi.getIdPresensi());
+                                    deletePresensiData.enqueue(new Callback<MessageResponseModel>() {
+                                        @Override
+                                        public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
+                                            if (dialog.isShowing()){
+                                                dialog.dismiss();
+                                            }
+                                            if (response.code() == 200) {
+                                                if (response.body().getMessage().equals("Data berhasil di delete")) {
+                                                    Toast.makeText(mContext, "Presensi berhasil di hapus!", Toast.LENGTH_SHORT).show();
+                                                }
+                                                else {
+                                                    Toast.makeText(mContext, "Presensi gagal di hapus", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                            else {
+                                                Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                        @Override
+                                        public void onFailure(Call<MessageResponseModel> call, Throwable t) {
+                                            if (dialog.isShowing()){
+                                                dialog.dismiss();
+                                            }
+                                            Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .show();
                 }
             });
 
             openCloseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog = new ProgressDialog(mContext);
+                    dialog.setMessage("Mohon tunggu...");
+                    dialog.show();
                     int position = getAdapterPosition(); // untuk mendapatkan posisi di adapter
                     Presensi presensi = presensiArrayList.get(position); //untuk dapetin posisi item dari arraylist yang di klik di cardnya
 
@@ -136,26 +174,33 @@ public class PresensiListAdapter extends RecyclerView.Adapter<PresensiListAdapte
                     openClosePresensi.enqueue(new Callback<MessageResponseModel>() {
                         @Override
                         public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
-                            if (response.body().getMessage().equals("Absensi berhasil di tutup")) {
-                                Toast.makeText(mContext, "Presensi berhasil di tutup", Toast.LENGTH_SHORT).show();
-
-                                openCloseButton.setText("Buka");
-                                //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
                             }
-
-                            else if (response.body().getMessage().equals("Absensi berhasil di buka")) {
-                                Toast.makeText(mContext, "Presensi berhasil di buka", Toast.LENGTH_SHORT).show();
-                                openCloseButton.setText("Tutup");
+                            if (response.code() == 200){
+                                if (response.body().getMessage().equals("Absensi berhasil di tutup")) {
+                                    Toast.makeText(mContext, "Presensi berhasil di tutup", Toast.LENGTH_SHORT).show();
+                                    openCloseButton.setText("Buka presensi");
+                                }
+                                else if (response.body().getMessage().equals("Absensi berhasil di buka")) {
+                                    Toast.makeText(mContext, "Presensi berhasil di buka", Toast.LENGTH_SHORT).show();
+                                    openCloseButton.setText("Tutup presensi");
+                                }
+                                else {
+                                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                                }
                             }
-
                             else {
-                                Toast.makeText(mContext, "Status presensi gagal di update", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<MessageResponseModel> call, Throwable t) {
-                            Toast.makeText(mContext, "Status presensi gagal di update", Toast.LENGTH_SHORT).show();
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
+                            }
+                            Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

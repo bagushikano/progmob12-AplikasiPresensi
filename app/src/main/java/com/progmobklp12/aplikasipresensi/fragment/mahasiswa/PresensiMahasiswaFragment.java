@@ -63,23 +63,36 @@ public class PresensiMahasiswaFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.fragment_presensi_mahasiswa, container, false);
-
-
+        listKosong = v.findViewById(R.id.empty_view);
         fabRefresh = v.findViewById(R.id.presensi_refresh_fab);
-
         presensiArrayList = new ArrayList<>();
-
         recyclerView = v.findViewById(R.id.presensi_recycler_view);
         presensiListMahasiswaAdapter = new PresensiListMahasiswaAdapter(this.getActivity(), presensiArrayList);
         linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(presensiListMahasiswaAdapter);
 
+        presensiListMahasiswaAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (presensiListMahasiswaAdapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    listKosong.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    listKosong.setVisibility(View.GONE);
+                }
+            }
+        });
+
         getMahasiswaPresensi();
 
         fabRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(v, "List presensi sedang di refresh, harap tunggu", Snackbar.LENGTH_SHORT).show();
                 presensiArrayList.clear();
                 getMahasiswaPresensi();
             }
@@ -89,24 +102,34 @@ public class PresensiMahasiswaFragment extends Fragment {
     }
 
     public void getMahasiswaPresensi() {
+        v.findViewById(R.id.muter_muter).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.presensi_recycler_view).setVisibility(View.GONE);
+        v.findViewById(R.id.empty_view).setVisibility(View.GONE);
         BaseApi getPresensiMahasiswa = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<PresensiMahasiswaResponse> presensiMahasiswaResponseCall = getPresensiMahasiswa.listPresensiMahasiswa();
         presensiMahasiswaResponseCall.enqueue(new Callback<PresensiMahasiswaResponse>() {
             @Override
             public void onResponse(Call<PresensiMahasiswaResponse> call, Response<PresensiMahasiswaResponse> response) {
-                if (response.body().getMessage().equals("List Absensi berhasil ditampilkan")) {
-                    presensiArrayList.addAll(response.body().getData());
-                    presensiListMahasiswaAdapter.notifyDataSetChanged();
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("List Absensi berhasil ditampilkan")) {
+                        presensiArrayList.addAll(response.body().getData());
+                    }
+                    else {
+                        Snackbar.make(v, "Data presensi gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
                 else {
                     Snackbar.make(v, "Data presensi gagal di refresh!", Snackbar.LENGTH_SHORT).show();
                 }
+                presensiListMahasiswaAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<PresensiMahasiswaResponse> call, Throwable t) {
+                v.findViewById(R.id.muter_muter).setVisibility(View.GONE);
                 Snackbar.make(v, "Data presensi gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                presensiListMahasiswaAdapter.notifyDataSetChanged();
             }
         });
     }

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -33,6 +34,8 @@ public class DetailPresensiActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     int id;
 
+    private TextView listKosong;
+
     private TextView presensiNameView;
     private TextView presensiKeteranganView;
     private TextView presensiDateOpenView;
@@ -48,6 +51,8 @@ public class DetailPresensiActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras(); //ini di pake buat nangkep data yang di dapet dari activity yang manggil activity ini
 
         id = extras.getInt("PRESENSIID");
+
+        listKosong = findViewById(R.id.empty_view);
 
         presensiNameView = findViewById(R.id.presensi_detail_name_view);
         presensiKeteranganView = findViewById(R.id.presensi_detail_keterangan_view);
@@ -75,28 +80,51 @@ public class DetailPresensiActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(detailPresensiListAdapter);
+
+        detailPresensiListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (detailPresensiListAdapter.getItemCount() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    listKosong.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    listKosong.setVisibility(View.GONE);
+                }
+            }
+        });
+
         getDetailPresensi();
     }
 
     public void getDetailPresensi() {
+        findViewById(R.id.muter_muter).setVisibility(View.VISIBLE);
+        findViewById(R.id.presensi_detail_recycler_view).setVisibility(View.GONE);
+        findViewById(R.id.empty_view).setVisibility(View.GONE);
         BaseApi detailPresensi = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<DetailPresensiResponse> detailPresensiResponseCall = detailPresensi.detailPresensiDosen(id);
         detailPresensiResponseCall.enqueue(new Callback<DetailPresensiResponse>() {
             @Override
             public void onResponse(Call<DetailPresensiResponse> call, Response<DetailPresensiResponse> response) {
-                if (response.body().getMessage().equals("Presensi Berhasil di tampilkan")) {
-                    detailPresensiArrayList.addAll(response.body().getData());
-                    detailPresensiListAdapter.notifyDataSetChanged();
-//                    Snackbar.make(v, "Data presensi terbuka berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
-                } else {
-//                    Snackbar.make(v, "Data presensi terbuka gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Presensi Berhasil di tampilkan")) {
+                        detailPresensiArrayList.addAll(response.body().getData());
+                        detailPresensiListAdapter.notifyDataSetChanged();
+                        Snackbar.make(findViewById(android.R.id.content), "Daftar detail presensi berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<DetailPresensiResponse> call, Throwable t) {
-//                Snackbar.make(v, "Data presensi terbuka gagal di refresh!", Snackbar.LENGTH_SHORT).show();
+                findViewById(R.id.muter_muter).setVisibility(View.GONE);
+                detailPresensiListAdapter.notifyDataSetChanged();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }

@@ -2,6 +2,7 @@ package com.progmobklp12.aplikasipresensi.activity.mahasiswa;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.activity.dosen.ChangePasswordDosenActivity;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
@@ -34,9 +36,16 @@ public class EditProfileMahasiswaActivity extends AppCompatActivity {
     private TextInputEditText usernameTextField;
     private TextInputEditText passwordTextField;
 
+    private TextInputLayout namaUserLayout;
+    private TextInputLayout nimUserLayout;
+    private TextInputLayout usernameLayout;
+    private TextInputLayout passwordLayout;
+
     private String namaUser;
     private String nimUser;
     private String username;
+
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +61,49 @@ public class EditProfileMahasiswaActivity extends AppCompatActivity {
         changePassword = findViewById(R.id.update_password_mahasiswa_text);
         editProfile = findViewById(R.id.update_profile_mahasiwa_button);
 
+        namaUserLayout = findViewById(R.id.nama_form);
+        nimUserLayout = findViewById(R.id.noinduk_form);
+        usernameLayout = findViewById(R.id.username_form);
+        passwordLayout = findViewById(R.id.password_form);
+
+        dialog = new ProgressDialog(this);
+
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProfileMahasiswa();
+                if(namaUserTextField.getText().toString().length() == 0) {
+                    namaUserLayout.setError(getString(R.string.register_name_error));
+                } else {
+                    if (namaUserTextField.getText().toString().length() > 50) {
+                        namaUserLayout.setError(getString(R.string.register_name_error_length));
+                    } else {
+                        namaUserLayout.setError(null);
+                        if (nimUserTextField.getText().toString().length() == 0) {
+                            nimUserLayout.setError(getString(R.string.register_noinduk_error));
+                        } else {
+                            if (nimUserTextField.getText().toString().length() > 15) {
+                                nimUserLayout.setError(getString(R.string.register_noinduk_error_length));
+                            } else {
+                                nimUserLayout.setError(null);
+                                if (usernameTextField.getText().toString().length() == 0) {
+                                    usernameLayout.setError(getString(R.string.register_username_error));
+                                } else {
+                                    if (usernameTextField.getText().toString().length() > 25) {
+                                        usernameLayout.setError(getString(R.string.register_username_error_length));
+                                    } else {
+                                        usernameLayout.setError(null);
+                                        if (passwordTextField.getText().toString().length() == 0) {
+                                            passwordLayout.setError(getString(R.string.register_password_error));
+                                        } else {
+                                            passwordLayout.setError(null);
+                                            editProfileMahasiswa();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
 
@@ -80,39 +128,47 @@ public class EditProfileMahasiswaActivity extends AppCompatActivity {
     }
 
     public void editProfileMahasiswa() {
+        dialog.setMessage("Mohon tunggu...");
+        dialog.show();
         BaseApi editMahasiswaProfile = RetrofitClient.buildRetrofit().create(BaseApi.class);
         Call<UpdateProfileMahasiswaResponse> updateProfileMahasiswaResponseCall = editMahasiswaProfile.editProfileMahasiswa(username, namaUserTextField.getText().toString(),
                 nimUserTextField.getText().toString(), usernameTextField.getText().toString(), passwordTextField.getText().toString());
         updateProfileMahasiswaResponseCall.enqueue(new Callback<UpdateProfileMahasiswaResponse>() {
             @Override
             public void onResponse(Call<UpdateProfileMahasiswaResponse> call, Response<UpdateProfileMahasiswaResponse> response) {
-                if(response.body().getMessage() != null ) {
-                    if (response.body().getMessage().equals("Data berhasil di Update")) {
-                        SharedPreferences.Editor editor = loginPreferences.edit();
-                        String nama = response.body().getData().get(0).getNama();
-                        String username = response.body().getData().get(0).getUsername();
-                        String nim = response.body().getData().get(0).getNim();
-                        editor.putString("nama", nama);
-                        editor.putString("username", username);
-                        editor.putString("nim", nim);
-                        editor.apply();
-                        Toast.makeText(getApplicationContext(), String.format("Profile berhasil di update!"), Toast.LENGTH_SHORT).show();
-                        setResult(2);
-                        finish();
-
-                        //TODO ada bug disini klo semisal koneksi ke server putus dia crash
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Profile gagal di update silahkan cek password", Toast.LENGTH_SHORT).show();
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
+                if (response.code() == 200) {
+                    if(response.body().getMessage() != null ) {
+                        if (response.body().getMessage().equals("Data berhasil di Update")) {
+                            SharedPreferences.Editor editor = loginPreferences.edit();
+                            String nama = response.body().getData().get(0).getNama();
+                            String username = response.body().getData().get(0).getUsername();
+                            String nim = response.body().getData().get(0).getNim();
+                            editor.putString("nama", nama);
+                            editor.putString("username", username);
+                            editor.putString("nim", nim);
+                            editor.apply();
+                            Toast.makeText(getApplicationContext(), String.format("Profile berhasil di update!"), Toast.LENGTH_SHORT).show();
+                            setResult(2);
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Profile gagal di update silahkan cek password", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UpdateProfileMahasiswaResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Profile gagal di update", Toast.LENGTH_SHORT).show();
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
+                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             }
         });
     }

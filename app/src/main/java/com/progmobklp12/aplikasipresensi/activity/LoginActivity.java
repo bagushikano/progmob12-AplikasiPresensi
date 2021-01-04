@@ -188,26 +188,29 @@ public class LoginActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                if (response.body().getMessage().equals("login sukses")) {
-                    SharedPreferences.Editor editor = loginPreferences.edit();
-                    String nama = response.body().getData().getNama();
-                    String username = response.body().getData().getUsername();
-                    String nip = response.body().getData().getNip();
-                    editor.putInt("login_status", 1);
-                    editor.putString("nama", nama);
-                    editor.putString("username", username);
-                    editor.putString("nip", nip);
-                    editor.apply();
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("login sukses")) {
+                        SharedPreferences.Editor editor = loginPreferences.edit();
+                        String nama = response.body().getData().getNama();
+                        String username = response.body().getData().getUsername();
+                        String nip = response.body().getData().getNip();
+                        editor.putInt("login_status", 1);
+                        editor.putString("nama", nama);
+                        editor.putString("username", username);
+                        editor.putString("nip", nip);
+                        editor.apply();
 
-                    Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
-                    Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
-                    startActivity(homeActivity);
-                    finish();
-
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
+                        Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
+                        Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
+                        startActivity(homeActivity);
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Login gagal silahkan cek password dan username", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Login gagal silahkan cek password dan username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -216,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
             }
         });
     }

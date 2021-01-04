@@ -78,23 +78,26 @@ public class PresensiListMahasiswaAdapter extends RecyclerView.Adapter<PresensiL
         detailPresensiResponseCall.enqueue(new Callback<DetailPresensiResponse>() {
             @Override
             public void onResponse(Call<DetailPresensiResponse> call, Response<DetailPresensiResponse> response) {
-                Log.d("duar", valueOf(response.code()));
-                if (response.body().getMessage().equals("Presensi telah di isi")) {
-                    holder.fillPresensiButton.setText("Anda telah mengisi presensi ini");
-                    holder.fillPresensiButton.setEnabled(false);
-                    holder.itemView.setEnabled(true);
-                    //TODO ada bug disini klo semisal koneksi ke server putus dia crash
-                }
-                else {
-                    if(presensiArrayList.get(position).getIsOpen() == 0) {
-                        holder.fillPresensiButton.setText("Presensi di tutup");
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("Presensi telah di isi")) {
+                        holder.fillPresensiButton.setText("Anda telah mengisi presensi ini");
                         holder.fillPresensiButton.setEnabled(false);
-                        holder.itemView.setEnabled(false);
+                        holder.itemView.setEnabled(true);
                     }
                     else {
-                        holder.itemView.setEnabled(false);
-                        holder.fillPresensiButton.setText("Isi presensi");
+                        if(presensiArrayList.get(position).getIsOpen() == 0) {
+                            holder.fillPresensiButton.setText("Presensi di tutup");
+                            holder.fillPresensiButton.setEnabled(false);
+                            holder.itemView.setEnabled(false);
+                        }
+                        else {
+                            holder.itemView.setEnabled(false);
+                            holder.fillPresensiButton.setText("Isi presensi");
+                        }
                     }
+                }
+                else {
+                    Toast.makeText(mContext, "Gagal dalam mengecek status pengisian presensi", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
