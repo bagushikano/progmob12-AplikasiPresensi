@@ -113,7 +113,7 @@ public class DetailPresensiActivity extends AppCompatActivity {
                     if (response.body().getMessage().equals("Presensi Berhasil di tampilkan")) {
                         detailPresensiArrayList.addAll(response.body().getData());
                         detailPresensiListAdapter.notifyDataSetChanged();
-                        Snackbar.make(findViewById(android.R.id.content), "Daftar detail presensi berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Daftar detail presensi berhasil di refresh!", Snackbar.LENGTH_SHORT).show();
                     } else {
                         Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
                     }

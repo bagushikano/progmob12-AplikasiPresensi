@@ -14,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.progmobklp12.aplikasipresensi.R;
@@ -153,11 +154,11 @@ public class RegisterActivity extends AppCompatActivity {
                         finish();
                     }
                     else if (response.body().getMessage().equals("username sama")) {
-                        Toast.makeText(getApplicationContext(), "Username tidak tersedia", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Username tidak tersedia", Snackbar.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Register gagal, silahkan coba lagi nanti", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Register gagal, silahkan coba lagi nanti", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -166,7 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "Server error", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -191,11 +192,11 @@ public class RegisterActivity extends AppCompatActivity {
                         finish();
                     }
                     else if (response.body().getMessage().equals("username sama")) {
-                        Toast.makeText(getApplicationContext(), "Username tidak tersedia", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Username tidak tersedia", Snackbar.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Register gagal, silahkan coba lagi nanti", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -204,7 +205,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }

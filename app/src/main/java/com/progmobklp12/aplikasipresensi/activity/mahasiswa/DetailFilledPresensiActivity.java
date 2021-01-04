@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.progmobklp12.aplikasipresensi.R;
 import com.progmobklp12.aplikasipresensi.api.BaseApi;
 import com.progmobklp12.aplikasipresensi.api.RetrofitClient;
@@ -95,12 +96,15 @@ public class DetailFilledPresensiActivity extends AppCompatActivity {
                 else {
                     presensiDateFilled.setText("Tanggal di isi: koneksi ke server gagal");
                     isApproved.setText("Status presensi: koneksi ke server gagal");
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
+
                 }
             }
             @Override
             public void onFailure(Call<DetailPresensiResponse> call, Throwable t) {
                 presensiDateFilled.setText("Tanggal di isi: koneksi ke server gagal");
                 isApproved.setText("Status presensi: koneksi ke server gagal");
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
 

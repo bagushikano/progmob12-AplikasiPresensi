@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.progmobklp12.aplikasipresensi.R;
@@ -143,24 +144,29 @@ public class LoginActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                if (response.body().getMessage().equals("login sukses")) {
-                    SharedPreferences.Editor editor = loginPreferences.edit();
-                    String nama = response.body().getData().getNama();
-                    String username = response.body().getData().getUsername();
-                    String nim = response.body().getData().getNim();
-                    editor.putInt("login_status", 2);
-                    editor.putString("nama", nama);
-                    editor.putString("username", username);
-                    editor.putString("nim", nim);
-                    editor.apply();
+                if (response.code() == 200) {
+                    if (response.body().getMessage().equals("login sukses")) {
+                        SharedPreferences.Editor editor = loginPreferences.edit();
+                        String nama = response.body().getData().getNama();
+                        String username = response.body().getData().getUsername();
+                        String nim = response.body().getData().getNim();
+                        editor.putInt("login_status", 2);
+                        editor.putString("nama", nama);
+                        editor.putString("username", username);
+                        editor.putString("nim", nim);
+                        editor.apply();
 
-                    Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
-                    Intent homeActivityMahasiswa = new Intent(getApplicationContext(), HomeMahasiswaActivity.class);
-                    startActivity(homeActivityMahasiswa);
-                    finish();
+                        Toast.makeText(getApplicationContext(), String.format("Login berhasil, selamat datang %1s", response.body().getData().getNama()), Toast.LENGTH_SHORT).show();
+                        Intent homeActivityMahasiswa = new Intent(getApplicationContext(), HomeMahasiswaActivity.class);
+                        startActivity(homeActivityMahasiswa);
+                        finish();
+                    }
+                    else {
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Login gagal, silahkan cek password dan username", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Login gagal silahkan cek password dan username", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -169,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }

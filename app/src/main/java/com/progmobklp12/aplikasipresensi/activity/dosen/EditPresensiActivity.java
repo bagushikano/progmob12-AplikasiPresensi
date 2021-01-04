@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -370,7 +371,7 @@ public class EditPresensiActivity extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Presensi gagal di update", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Presensi gagal di update", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -380,7 +381,7 @@ public class EditPresensiActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }

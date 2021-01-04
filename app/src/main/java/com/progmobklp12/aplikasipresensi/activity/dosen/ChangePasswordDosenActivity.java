@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.progmobklp12.aplikasipresensi.R;
@@ -98,16 +99,16 @@ public class ChangePasswordDosenActivity extends AppCompatActivity {
         updatePasswordDosenResponseCall.enqueue(new Callback<MessageResponseModel>() {
             @Override
             public void onResponse(Call<MessageResponseModel> call, Response<MessageResponseModel> response) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
                 if (response.code() == 200) {
                     if(response.body().getMessage() != null ) {
                         if (response.body().getMessage().equals("Password berhasil di Update")) {
-                            if (dialog.isShowing()){
-                                dialog.dismiss();
-                            }
                             Toast.makeText(getApplicationContext(), String.format("Password berhasil di update!"), Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Password gagal di update, silahkan cek password lama", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Password gagal di update, silahkan cek password lama", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }

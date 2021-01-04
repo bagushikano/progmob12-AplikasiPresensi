@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.progmobklp12.aplikasipresensi.R;
@@ -154,12 +155,13 @@ public class EditProfileMahasiswaActivity extends AppCompatActivity {
                             setResult(2);
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Profile gagal di update silahkan cek password", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Profile gagal di update, " +
+                                    "silahkan cek password dan data yang di update, atau tunggu beberapa saat", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -168,7 +170,7 @@ public class EditProfileMahasiswaActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.TimeFormat;
@@ -351,7 +352,7 @@ public class CreatePresensi extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), "Presensi gagal di Buat", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.server_error), Snackbar.LENGTH_SHORT).show();
             }
         });
     }
