@@ -154,7 +154,11 @@ public class EditProfileMahasiswaActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), String.format("Profile berhasil di update!"), Toast.LENGTH_SHORT).show();
                             setResult(2);
                             finish();
-                        } else {
+                        }
+                        else if (response.body().getMessage().equals("username sama")) {
+                            Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Username tidak tersedia", Snackbar.LENGTH_SHORT).show();
+                        }
+                        else {
                             Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Profile gagal di update, " +
                                     "silahkan cek password dan data yang di update, atau tunggu beberapa saat", Snackbar.LENGTH_SHORT).show();
                         }

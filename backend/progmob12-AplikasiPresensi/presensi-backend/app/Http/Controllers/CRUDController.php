@@ -9,10 +9,12 @@ use App\Presensi;
 use App\DetailPresensi;
 use Carbon\Carbon;
 
+
 class CRUDController extends Controller
 {
+
     public function newPresensi(Request $request){
-        $id = Dosen::where('username', $request->username)->get('id_dosen')->first();
+        $id = Dosen::where('username', $request->username)->get()->first();
         $presensi = Presensi::create([
             'id_dosen' => $id->id_dosen,
             'nama_presensi' => $request->nama_presensi,
@@ -21,6 +23,43 @@ class CRUDController extends Controller
             'tanggal_close' => $request->tanggal_close,
             'is_open' => 0
         ]);
+
+        $notiftitle = "Ada presensi baru oleh ". $id->nama;
+        $notifcontent = "Presensi baru dengan nama ". $request->nama_presensi;
+
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $fields = array(
+            "to" => "/topics/all",
+            'notification' => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
+            ),
+            "android" => array (
+                "notification"=> array (
+                    "tag" => "presensinew"
+                )
+            ),
+            "data" => array(
+                "type" => "all"
+            )
+        );
+        $headers = array(
+            'Authorization: key=AAAARvWFBSk:APA91bHfVZVkufvKbriuO7McpV-CguHTWwa7e9nuswg18F7N3qSjgEefKJsDqZTAKcZj26x0mEYgGaymJ_WtDuApADGhUsI9IbdxQJn1YTo4GC-Q738Rq4uvWabsbQ1pFTbr2k_o1T2Z',
+            'Content-type: Application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+
+
         return response()->json([
             'message' => 'Presensi Berhasil di Buat',
             'data' => $presensi
@@ -84,10 +123,50 @@ class CRUDController extends Controller
 
 
     public function openPresensi(Request $request, $presensi){
+        $date = now()->setTimezone('GMT+8');
         $updatePresensi = Presensi::where('id_presensi', $presensi)
         ->update([
-            'is_open' => 1
+            'is_open' => 1,
+            'tanggal_open' => $date
         ]);
+
+        $presensi = Presensi::where('id_presensi', $presensi)->get()->first();
+
+        $notiftitle = "Presensi di buka";
+        $notifcontent = "Presensi dengan nama ". $presensi->nama_presensi ." telah di buka";
+
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $fields = array(
+            "to" => "/topics/all",
+            'notification' => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
+            ),
+            "android" => array (
+                "notification"=> array (
+                    "tag" => "presensiopen"
+                )
+            ),
+            "data" => array(
+                "type" => "all"
+            )
+        );
+        $headers = array(
+            'Authorization: key=AAAARvWFBSk:APA91bHfVZVkufvKbriuO7McpV-CguHTWwa7e9nuswg18F7N3qSjgEefKJsDqZTAKcZj26x0mEYgGaymJ_WtDuApADGhUsI9IbdxQJn1YTo4GC-Q738Rq4uvWabsbQ1pFTbr2k_o1T2Z',
+            'Content-type: Application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+
         return response()->json([
             'message' => 'Absensi berhasil di buka'
         ]);
@@ -95,10 +174,50 @@ class CRUDController extends Controller
 
 
     public function closePresensi(Request $request, $presensi){
+        $date = now()->setTimezone('GMT+8');
         $updatePresensi = Presensi::where('id_presensi', $presensi)
         ->update([
-            'is_open' => 0
+            'is_open' => 0,
+            'tanggal_close'=> $date
         ]);
+
+        $presensi = Presensi::where('id_presensi', $presensi)->get()->first();
+
+        $notiftitle = "Presensi di tutup";
+        $notifcontent = "Presensi dengan nama ". $presensi->nama_presensi ." telah di tutup";
+
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $fields = array(
+            "to" => "/topics/all",
+            'notification' => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
+            ),
+            "android" => array (
+                "notification"=> array (
+                    "tag" => "presensiclose"
+                )
+            ),
+            "data" => array(
+                "type" => "all"
+            )
+        );
+        $headers = array(
+            'Authorization: key=AAAARvWFBSk:APA91bHfVZVkufvKbriuO7McpV-CguHTWwa7e9nuswg18F7N3qSjgEefKJsDqZTAKcZj26x0mEYgGaymJ_WtDuApADGhUsI9IbdxQJn1YTo4GC-Q738Rq4uvWabsbQ1pFTbr2k_o1T2Z',
+            'Content-type: Application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+
         return response()->json([
             'message' => 'Absensi berhasil di tutup'
         ]);
@@ -110,6 +229,23 @@ class CRUDController extends Controller
             'message' => 'List Absensi berhasil ditampilkan',
             'data' => $presensi
         ]);
+    }
+
+    public function detailPresensiMahasiswa(Request $request){
+        $id = Mahasiswa::where('username', $request->mahasiswa)->get('id_mahasiswa')->first();
+        $presensi = DetailPresensi::where('id_mahasiswa', $id->id_mahasiswa)->where('id_presensi', $request->presensi)->get();
+        if($presensi->count()>0) {
+            return response()->json([
+                'message' => 'Presensi telah di isi',
+                'data' => $presensi
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'Presensi blm di isi',
+            ]);
+        }
+
     }
 
     public function listClosePresensi(){
@@ -128,12 +264,21 @@ class CRUDController extends Controller
         ]);
     }
 
+    public function mahasiswaPresensi(Request $request){
+        $presensi = Presensi::with('dosen')->where('id_presensi', $request->presensi)->get();
+        return response()->json([
+            'message' => 'List Absensi berhasil ditampilkan',
+            'data' => $presensi
+        ]);
+    }
+
     public function newDetailPresensi(Request $request){
+        $id_mahasiswa = Mahasiswa::where('username', $request->username)->get('id_mahasiswa')->first();
         $presensi = DetailPresensi::create([
             'id_presensi' => $request->id_presensi,
-            'id_mahasiswa' => $request->id_mahasiswa,
-            'date_filled' => $date = now()->setTimezone('GMT+8'),
-            'is_approved' => 0
+            'id_mahasiswa' => $id_mahasiswa->id_mahasiswa,
+            'is_approved' => 0,
+            'date_filled'=> now()->setTimezone('GMT+8')
         ]);
         return response()->json([
             'message' => 'Presensi Berhasil di Buat',
@@ -172,6 +317,48 @@ class CRUDController extends Controller
         ->update([
             'is_approved' => 1
         ]);
+
+        $detailpresensi = DetailPresensi::where('id_detail_presensi', $detailPresensi)->get()->first();
+        $presensi = Presensi::where("id_presensi", $detailpresensi->id_presensi)->get()->first();
+        $mahasiswa = Mahasiswa::where("id_mahasiswa", $detailpresensi->id_mahasiswa)->get()->first();
+
+        $notiftitle = "Presensi anda di approve";
+        $notifcontent = "Presensi anda pada ". $presensi->nama_presensi ." telah di approve";
+
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $fields = array(
+            "to" => "/topics/all",
+            'notification' => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
+            ),
+            "android" => array (
+                "notification"=> array (
+                    "tag" => "approvenotif"
+                )
+            ),
+            "data" => array(
+                "type" => "notall",
+                "username" => $mahasiswa->username
+            )
+        );
+        $headers = array(
+            'Authorization: key=AAAARvWFBSk:APA91bHfVZVkufvKbriuO7McpV-CguHTWwa7e9nuswg18F7N3qSjgEefKJsDqZTAKcZj26x0mEYgGaymJ_WtDuApADGhUsI9IbdxQJn1YTo4GC-Q738Rq4uvWabsbQ1pFTbr2k_o1T2Z',
+            'Content-type: Application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+
+
         return response()->json([
             'message' => 'Absensi approved'
         ]);
@@ -182,6 +369,47 @@ class CRUDController extends Controller
         ->update([
             'is_approved' => 0
         ]);
+
+        $detailpresensi = DetailPresensi::where('id_detail_presensi', $detailPresensi)->get()->first();
+        $presensi = Presensi::where("id_presensi", $detailpresensi->id_presensi)->get()->first();
+        $mahasiswa = Mahasiswa::where("id_mahasiswa", $detailpresensi->id_mahasiswa)->get()->first();
+
+        $notiftitle = "Presensi anda di decline";
+        $notifcontent = "Presensi anda pada ". $presensi->nama_presensi ." telah di decline";
+
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $fields = array(
+            "to" => "/topics/all",
+            'notification' => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
+            ),
+            "android" => array (
+                "notification"=> array (
+                    "tag" => "declinenotif"
+                )
+            ),
+            "data" => array(
+                "type" => "notall",
+                "username" => $mahasiswa->username
+            )
+        );
+        $headers = array(
+            'Authorization: key=AAAARvWFBSk:APA91bHfVZVkufvKbriuO7McpV-CguHTWwa7e9nuswg18F7N3qSjgEefKJsDqZTAKcZj26x0mEYgGaymJ_WtDuApADGhUsI9IbdxQJn1YTo4GC-Q738Rq4uvWabsbQ1pFTbr2k_o1T2Z',
+            'Content-type: Application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        curl_exec($ch);
+        curl_close($ch);
+
         return response()->json([
             'message' => 'Absensi decline'
         ]);

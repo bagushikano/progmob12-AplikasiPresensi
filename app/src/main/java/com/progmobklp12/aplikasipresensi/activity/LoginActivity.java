@@ -212,11 +212,11 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Login gagal silahkan cek password dan username", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Login gagal silahkan cek password dan username", Snackbar.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Register gagal, silahkan coba lagi nanti", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -225,7 +225,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (dialog.isShowing()){
                     dialog.dismiss();
                 }
-                Toast.makeText(getApplicationContext(), getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Register gagal, silahkan coba lagi nanti", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
