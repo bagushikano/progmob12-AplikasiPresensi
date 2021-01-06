@@ -50,8 +50,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             if (data.get("type").equals("all")) {
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "presensi")
                         .setSmallIcon(R.drawable.ic_baseline_content_paste_24)
-                        .setContentTitle(remoteMessage.getNotification().getTitle())
-                        .setContentText(remoteMessage.getNotification().getBody())
+                        .setContentTitle(data.get("title"))
+                        .setContentText(data.get("body"))
                         .setContentIntent(pendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true);
@@ -66,8 +66,8 @@ public class FirebaseMessaging extends FirebaseMessagingService {
                 if (data.get("username").equals(username)){
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "approval")
                             .setSmallIcon(R.drawable.ic_baseline_content_paste_24)
-                            .setContentTitle(remoteMessage.getNotification().getTitle())
-                            .setContentText(remoteMessage.getNotification().getBody())
+                            .setContentTitle(data.get("title"))
+                            .setContentText(data.get("body"))
                             .setContentIntent(pendingIntent)
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .setAutoCancel(true);
