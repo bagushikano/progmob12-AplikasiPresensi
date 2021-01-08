@@ -3,7 +3,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="about">Tentang aplikasi</string>
     <string name="about_activity_title">Tentang PresensiKu</string>
-    <string name="made_by_about_activity">Made with ❤ By Kelompok 12 Praktikum Pemrograman Mobile</string>
+    <string name="made_by_about_activity">Made with soul and tears By Kelompok 12 Praktikum Pemrograman Mobile</string>
     <string name="presensi_name_form_hint">Nama Presensi</string>
     <string name="presensi_desc_form_hint">Deskripsi Presensi</string>
     <string name="presensi_date_open_form_hint">Tanggal presensi di buka</string>

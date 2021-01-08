@@ -92,6 +92,7 @@ public class PresensiListMahasiswaAdapter extends RecyclerView.Adapter<PresensiL
                         }
                         else {
                             holder.itemView.setEnabled(false);
+                            holder.fillPresensiButton.setEnabled(true);
                             holder.fillPresensiButton.setText("Isi presensi");
                         }
                     }
