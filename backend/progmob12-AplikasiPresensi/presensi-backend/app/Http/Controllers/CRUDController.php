@@ -30,16 +30,14 @@ class CRUDController extends Controller
         $url = 'https://fcm.googleapis.com/fcm/send';
         $fields = array(
             "to" => "/topics/all",
-            'notification' => array(
-                "title" => $notiftitle,
-                "body" => $notifcontent,
-            ),
             "android" => array (
                 "notification"=> array (
                     "tag" => "presensinew"
                 )
             ),
             "data" => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
                 "type" => "all"
             )
         );
@@ -58,7 +56,6 @@ class CRUDController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         curl_exec($ch);
         curl_close($ch);
-
 
         return response()->json([
             'message' => 'Presensi Berhasil di Buat',
@@ -138,16 +135,14 @@ class CRUDController extends Controller
         $url = 'https://fcm.googleapis.com/fcm/send';
         $fields = array(
             "to" => "/topics/all",
-            'notification' => array(
-                "title" => $notiftitle,
-                "body" => $notifcontent,
-            ),
             "android" => array (
                 "notification"=> array (
                     "tag" => "presensiopen"
                 )
             ),
             "data" => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
                 "type" => "all"
             )
         );
@@ -189,16 +184,14 @@ class CRUDController extends Controller
         $url = 'https://fcm.googleapis.com/fcm/send';
         $fields = array(
             "to" => "/topics/all",
-            'notification' => array(
-                "title" => $notiftitle,
-                "body" => $notifcontent,
-            ),
             "android" => array (
                 "notification"=> array (
                     "tag" => "presensiclose"
                 )
             ),
             "data" => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
                 "type" => "all"
             )
         );
@@ -328,16 +321,14 @@ class CRUDController extends Controller
         $url = 'https://fcm.googleapis.com/fcm/send';
         $fields = array(
             "to" => "/topics/all",
-            'notification' => array(
-                "title" => $notiftitle,
-                "body" => $notifcontent,
-            ),
             "android" => array (
                 "notification"=> array (
                     "tag" => "approvenotif"
                 )
             ),
             "data" => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
                 "type" => "notall",
                 "username" => $mahasiswa->username
             )
@@ -380,16 +371,14 @@ class CRUDController extends Controller
         $url = 'https://fcm.googleapis.com/fcm/send';
         $fields = array(
             "to" => "/topics/all",
-            'notification' => array(
-                "title" => $notiftitle,
-                "body" => $notifcontent,
-            ),
             "android" => array (
                 "notification"=> array (
                     "tag" => "declinenotif"
                 )
             ),
             "data" => array(
+                "title" => $notiftitle,
+                "body" => $notifcontent,
                 "type" => "notall",
                 "username" => $mahasiswa->username
             )
